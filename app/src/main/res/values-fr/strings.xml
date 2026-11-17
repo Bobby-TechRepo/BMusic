@@ -1,0 +1,414 @@
+<resources>
+    <string name="app_name">BMusic</string>
+
+    <!-- General -->
+    <string name="initializing">Initialisation…</string>
+    <string name="fetching_songs">Recherche de chansons, veuillez patienter…</string>
+    <string name="unknown">Inconnu</string>
+    <string name="back">Retour</string>
+    <string name="cancel">Annuler</string>
+    <string name="save">Enregistrer</string>
+    <string name="play">Lire</string>
+    <string name="shuffle">Aléatoire</string>
+    <string name="edit">Modifier</string>
+    <string name="delete">Supprimer</string>
+    <string name="remove">Retirer</string>
+    <string name="rename">Renommer</string>
+    <string name="open">Ouvrir</string>
+    <string name="add_songs">Ajouter des chansons</string>
+    <string name="confirm">Confirmer</string>
+    <string name="dismiss">Ignorer</string>
+
+    <!-- Home / Navigation -->
+    <string name="nav_playlists">Playlists</string>
+    <string name="nav_songs">Chansons</string>
+    <string name="nav_albums">Albums</string>
+    <string name="nav_artists">Artistes</string>
+
+    <!-- Settings -->
+    <string name="settings">Paramètres</string>
+    <string name="appearance">Apparence</string>
+    <string name="accent_color">Couleur d\'accentuation</string>
+    <string name="general">Général</string>
+    <string name="language">Langue</string>
+    <string name="lang_english">Anglais</string>
+    <string name="lang_japanese">Japonais</string>
+    <string name="lang_spanish">Espagnol</string>
+    <string name="lang_french">Français</string>
+    <string name="lang_chinese">Chinois</string>
+    <string name="pref_remember_last_tab">Mémoriser le dernier onglet</string>
+    <string name="pref_hide_short_songs">Masquer chansons courtes (&lt; 1 min)</string>
+    <string name="pref_shake_to_change">Secouer pour changer de chanson</string>
+    <string name="pref_sound_fade">Fondu sonore à la fin</string>
+
+    <!-- Playing Screen -->
+    <string name="now_playing">Lecture en cours</string>
+    <string name="queue">File d\'attente</string>
+    <string name="equalizer">Égaliseur</string>
+
+    <!-- Playlists -->
+    <string name="playlist_favourites">Favoris</string>
+    <string name="playlist_recently_added">Ajoutés récemment</string>
+    <string name="playlist_most_played">Les plus écoutées</string>
+    <string name="playlist_recently_played">Écoutées récemment</string>
+    <string name="custom_playlists">Playlists personnalisées</string>
+    <string name="search_songs">Rechercher des chansons</string>
+    <string name="songs_count">Chansons(%d)</string>
+    <string name="playlist_details">%1$d chansons - %2$s</string>
+
+    <!-- Playlist Form -->
+    <string name="create_playlist">Créer une playlist</string>
+    <string name="add_custom_playlist">Ajouter une playlist personnalisée</string>
+    <string name="playlist_name">Nom de la playlist</string>
+    <string name="specify_playlist_name">Spécifier le nom de la playlist</string>
+    <string name="btn_create">Créer</string>
+
+    <!-- Components -->
+    <string name="song_s_count">%d Chanson(s)</string>
+    <string name="artist_album_details">%1$d album(s) - %2$d chanson(s)</string>
+    <string name="play_all">Tout lire</string>
+    <string name="filter_song_list">Filtrer la liste</string>
+    <string name="selected_count">Sélectionné: %d</string>
+    <string name="artist_label">Artiste: %s</string>
+    <string name="album_label">Album: %s</string>
+    <string name="song_detail_label">%1$s • %2$s</string>
+
+    <!-- Status / Error Messages -->
+    <string name="error_unexpected">Erreur inattendue, réessayez</string>
+    <string name="error_album_not_found">Album introuvable avec l\'id: %d</string>
+    <string name="error_artist_not_found">Artiste introuvable avec l\'id: %d</string>
+    <string name="error_storage_permission">Autorisation de stockage requise</string>
+
+    <!-- Dialogs -->
+    <string name="delete_confirmation_title">Confirmation de suppression</string>
+    <string name="delete_playlist_message">Voulez-vous vraiment supprimer la playlist %s ?</string>
+
+    <!-- Playback Service Browsable Items -->
+    <string name="library_root">Bibliothèque</string>
+    <string name="songs_browsable">Chansons</string>
+    <string name="albums_browsable">Albums</string>
+    <string name="artists_browsable">Artistes</string>
+
+    <!-- Phase 1: permission, error and empty states -->
+    <string name="permission_title">Autorisez l\'accès à votre musique</string>
+    <string name="permission_body">BMusic a besoin d\'autorisation pour lire les fichiers audio de cet appareil afin d\'afficher et de lire votre musique.</string>
+    <string name="permission_grant">Autoriser l\'accès</string>
+    <string name="open_settings">Ouvrir les paramètres</string>
+    <string name="retry">Réessayer</string>
+    <string name="error_title">Un problème est survenu</string>
+    <string name="library_empty_title">Aucune musique trouvée</string>
+    <string name="library_empty_body">Copiez des fichiers audio sur cet appareil et ils apparaîtront ici automatiquement.</string>
+    <string name="error_cannot_play">Impossible de lire « %1$s ». Morceau ignoré.</string>
+    <string name="error_cannot_play_generic">Ce morceau ne peut pas être lu.</string>
+    <string name="player_unavailable">Impossible de se connecter au lecteur. Réessayez.</string>
+    <string name="cd_play">Lecture</string>
+    <string name="cd_pause">Pause</string>
+    <string name="cd_next">Morceau suivant</string>
+    <string name="cd_previous">Morceau précédent</string>
+    <string name="cd_forward">Avancer de 10 secondes</string>
+    <string name="cd_rewind">Reculer de 10 secondes</string>
+
+    <!-- Phase 3: song menu, queue, playlists, search, sorting, accessibility -->
+    <string name="accent_dynamic">Selon le fond d\'écran</string>
+    <string name="add_to_favourites">Ajouter aux favoris</string>
+    <string name="remove_from_favourites">Retirer des favoris</string>
+    <string name="add_to_playlist">Ajouter à une playlist</string>
+    <string name="add_to_queue">Ajouter à la file</string>
+    <string name="added_to_playlist">Ajouté à %1$s</string>
+    <string name="added_to_queue">« %1$s » ajouté à la file</string>
+    <string name="playing_next">« %1$s » sera lu ensuite</string>
+    <string name="play_next">Lire ensuite</string>
+    <string name="go_to_album">Aller à l\'album</string>
+    <string name="go_to_artist">Aller à l\'artiste</string>
+    <string name="share">Partager</string>
+    <string name="remove_from_playlist">Retirer de la playlist</string>
+    <string name="new_playlist">Nouvelle playlist</string>
+    <string name="rename_playlist">Renommer la playlist</string>
+    <string name="no_custom_playlists">Aucune playlist pour l\'instant. Touchez + pour en créer une.</string>
+    <string name="select_all">Tout sélectionner</string>
+    <string name="save_as_playlist">Enregistrer en playlist</string>
+    <string name="saved_as_playlist">Enregistrée sous %1$s</string>
+    <string name="clear_queue">Vider la file</string>
+    <string name="clear_queue_message">Retirer tous les morceaux de la file ? La lecture s\'arrêtera.</string>
+    <string name="search">Rechercher</string>
+    <string name="search_library_hint">Rechercher des morceaux, albums, artistes et playlists</string>
+    <string name="search_no_results">Aucun résultat pour « %1$s »</string>
+    <string name="clear_search">Effacer la recherche</string>
+    <string name="sort_by">Tri : %1$s</string>
+    <string name="sort_title">Titre</string>
+    <string name="sort_artist">Artiste</string>
+    <string name="sort_album">Album</string>
+    <string name="sort_date_added">Ajout récent</string>
+    <string name="sort_duration">Plus longs d\'abord</string>
+    <string name="playing_tab">Lecture</string>
+    <string name="language_system_default">Langue du système</string>
+    <string name="cd_now_playing">En cours de lecture</string>
+    <string name="cd_song_options">Options du morceau</string>
+    <string name="cd_remove_from_queue">Retirer de la file</string>
+    <string name="cd_reorder">Glisser pour réorganiser</string>
+    <string name="cd_repeat_off">Répétition désactivée</string>
+    <string name="cd_repeat_all">Tout répéter</string>
+    <string name="cd_repeat_one">Répéter un titre</string>
+    <string name="cd_shuffle_on">Lecture aléatoire activée</string>
+    <string name="cd_shuffle_off">Lecture aléatoire désactivée</string>
+    <plurals name="played_times">
+        <item quantity="one">Lu %d fois</item>
+        <item quantity="other">Lu %d fois</item>
+        <item quantity="many">Lu %d de fois</item>
+    </plurals>
+    <plurals name="queue_count">
+        <item quantity="one">%d morceau dans la file</item>
+        <item quantity="other">%d morceaux dans la file</item>
+        <item quantity="many">%d de morceaux dans la file</item>
+    </plurals>
+    <plurals name="song_count">
+        <item quantity="one">%d morceau</item>
+        <item quantity="other">%d morceaux</item>
+        <item quantity="many">%d de morceaux</item>
+    </plurals>
+    <plurals name="search_section_songs">
+        <item quantity="one">Morceau</item>
+        <item quantity="other">Morceaux (%d)</item>
+        <item quantity="many">Morceaux (%d)</item>
+    </plurals>
+    <plurals name="search_section_albums">
+        <item quantity="one">Album</item>
+        <item quantity="other">Albums (%d)</item>
+        <item quantity="many">Albums (%d)</item>
+    </plurals>
+    <plurals name="search_section_artists">
+        <item quantity="one">Artiste</item>
+        <item quantity="other">Artistes (%d)</item>
+        <item quantity="many">Artistes (%d)</item>
+    </plurals>
+    <plurals name="search_section_playlists">
+        <item quantity="one">Playlist</item>
+        <item quantity="other">Playlists (%d)</item>
+        <item quantity="many">Playlists (%d)</item>
+    </plurals>
+
+    <!-- Phase 4a: sleep timer, speed, sound effects, stats, backup -->
+    <string name="playback_speed">Vitesse de lecture</string>
+    <string name="sleep_timer">Minuterie de sommeil</string>
+    <string name="sleep_timer_on">Minuterie activée</string>
+    <string name="sleep_timer_stops_in">La musique s\'arrête dans %1$s</string>
+    <string name="sleep_timer_add_10">+10 min</string>
+    <string name="sleep_timer_off">Désactiver</string>
+    <string name="sleep_timer_after_song_active">La musique s\'arrête à la fin de ce morceau</string>
+    <string name="sleep_timer_minutes">%1$d min</string>
+    <string name="sleep_timer_end_of_song">Fin du morceau</string>
+    <string name="sound_effects">Effets sonores</string>
+    <string name="effects_unsupported">Cet appareil ne prend pas en charge les effets sonores supplémentaires.</string>
+    <string name="bass_boost">Renforcement des basses</string>
+    <string name="virtualizer">Son surround</string>
+    <string name="loudness_boost">Amplification du volume</string>
+    <string name="percent_value">%1$d %%</string>
+    <string name="stats_title">Statistiques d\'écoute</string>
+    <string name="stats_period_week">7 jours</string>
+    <string name="stats_period_month">30 jours</string>
+    <string name="stats_period_all">Depuis le début</string>
+    <string name="stats_plays">Écoutes</string>
+    <string name="stats_time">Temps d\'écoute</string>
+    <string name="stats_songs">Morceaux</string>
+    <string name="stats_top_songs">Morceaux les plus écoutés</string>
+    <string name="stats_top_artists">Artistes les plus écoutés</string>
+    <string name="stats_empty">Écoutez de la musique et vos statistiques apparaîtront ici. Un morceau compte après 30 secondes d\'écoute.</string>
+    <string name="stats_hours_minutes">%1$d h %2$d min</string>
+    <string name="backup_title">Sauvegarde</string>
+    <string name="backup_description">Enregistrez vos favoris, playlists, compteurs d\'écoute et historique dans un fichier, puis restaurez-les sur ce téléphone ou un autre.</string>
+    <string name="backup_export">Sauvegarder</string>
+    <string name="backup_import">Restaurer</string>
+    <string name="backup_done">Sauvegarde enregistrée : %1$d favoris et %2$d playlists.</string>
+    <string name="backup_invalid_file">Ce fichier n\'est pas une sauvegarde BMusic.</string>
+    <string name="backup_failed">Un problème est survenu avec le fichier. Rien n\'a été modifié.</string>
+    <string name="restore_done">%1$d favoris, %2$d nouvelles playlists et %3$d morceaux de playlists restaurés.</string>
+    <plurals name="stats_play_count">
+        <item quantity="one">%d écoute</item>
+        <item quantity="other">%d écoutes</item>
+        <item quantity="many">%d d\'écoutes</item>
+    </plurals>
+    <plurals name="restore_missing">
+        <item quantity="one">%d morceau de la sauvegarde n\'est pas sur cet appareil.</item>
+        <item quantity="other">%d morceaux de la sauvegarde ne sont pas sur cet appareil.</item>
+        <item quantity="many">%d de morceaux de la sauvegarde ne sont pas sur cet appareil.</item>
+    </plurals>
+
+    <!-- Phase 4b: lyrics, smart playlists, widget -->
+    <string name="lyrics">Paroles</string>
+    <string name="lyrics_nothing_playing">Aucune lecture en cours</string>
+    <string name="lyrics_none">Pas de paroles pour ce morceau</string>
+    <string name="lyrics_none_hint">Les paroles enregistrées dans le fichier s\'affichent ici automatiquement. Vous pouvez aussi importer un fichier .lrc pour ce morceau.</string>
+    <string name="lyrics_import">Importer un fichier .lrc</string>
+    <string name="lyrics_replace">Remplacer les paroles</string>
+    <string name="lyrics_remove_imported">Supprimer les paroles importées</string>
+    <string name="lyrics_import_failed">Ce fichier ne contient pas de paroles lisibles par BMusic.</string>
+    <string name="playlist_rediscover">Redécouvrir</string>
+    <string name="playlist_never_played">Jamais écoutés</string>
+    <string name="widget_name">En cours de lecture</string>
+    <string name="widget_description">Le morceau en cours, avec les boutons lecture, précédent et suivant.</string>
+    <string name="widget_idle">Touchez pour ouvrir BMusic</string>
+    <plurals name="restore_lyrics">
+        <item quantity="one">Paroles de %d morceau restaurées.</item>
+        <item quantity="many">Paroles de %d de morceaux restaurées.</item>
+        <item quantity="other">Paroles de %d morceaux restaurées.</item>
+    </plurals>
+
+    <!-- Phase 5: ReplayGain, M3U, Android Auto playlists -->
+    <string name="pref_replay_gain">Égalisation du volume (ReplayGain)</string>
+    <string name="pref_replay_gain_summary">Lit les morceaux à un volume homogène grâce aux balises ReplayGain. Les morceaux sans balises ne changent pas.</string>
+    <string name="replay_gain_off">Désactivé</string>
+    <string name="replay_gain_track">Par morceau</string>
+    <string name="replay_gain_album">Par album</string>
+    <string name="playlists_browsable">Playlists</string>
+    <string name="export_m3u">Exporter en M3U</string>
+    <string name="import_m3u">Importer M3U</string>
+    <string name="m3u_exported">Playlist exportée.</string>
+    <string name="m3u_invalid_file">Ce fichier n\'est pas une playlist M3U.</string>
+    <string name="m3u_no_songs_found">Aucun morceau de cette playlist n\'est sur cet appareil.</string>
+    <string name="m3u_failed">Un problème est survenu avec le fichier. Rien n\'a été modifié.</string>
+    <plurals name="m3u_imported">
+        <item quantity="one">« %1$s » créée avec %2$d morceau.</item>
+        <item quantity="many">« %1$s » créée avec %2$d de morceaux.</item>
+        <item quantity="other">« %1$s » créée avec %2$d morceaux.</item>
+    </plurals>
+    <plurals name="m3u_missing">
+        <item quantity="one">%d morceau du fichier n\'est pas sur cet appareil.</item>
+        <item quantity="many">%d de morceaux du fichier ne sont pas sur cet appareil.</item>
+        <item quantity="other">%d morceaux du fichier ne sont pas sur cet appareil.</item>
+    </plurals>
+
+    <!-- Redesign: search, settings, sound effect knobs, stats -->
+    <string name="effects_knob_hint">Tournez un bouton pour régler. Touchez deux fois pour réinitialiser.</string>
+    <string name="search_filter_all">Tout</string>
+    <string name="search_filter_songs">Morceaux</string>
+    <string name="search_filter_albums">Albums</string>
+    <string name="search_filter_artists">Artistes</string>
+    <string name="search_filter_playlists">Playlists</string>
+    <string name="search_filter_count">%1$s · %2$d</string>
+    <string name="search_top_result">Meilleur résultat</string>
+    <string name="search_see_all">Tout voir</string>
+    <string name="search_recent">Recherches récentes</string>
+    <string name="search_clear_history">Effacer</string>
+    <string name="search_empty_title">Recherchez dans votre bibliothèque</string>
+    <string name="search_empty_message">Trouvez morceaux, albums, artistes et playlists en tapant.</string>
+    <string name="search_no_results_hint">Vérifiez l\'orthographe ou essayez moins de mots.</string>
+    <string name="search_type_song">Morceau · %1$s</string>
+    <string name="search_type_album">Album · %1$s</string>
+    <string name="search_type_artist">Artiste</string>
+    <string name="search_song_detail">%1$s · %2$s</string>
+    <string name="cd_remove_recent_search">Retirer « %1$s » des recherches récentes</string>
+    <string name="accent_custom">La couleur choisie</string>
+    <string name="pref_remember_last_tab_summary">Ouvrir sur le dernier onglet utilisé</string>
+    <string name="pref_hide_short_songs_summary">Écarte sonneries et notes vocales de la bibliothèque</string>
+    <string name="pref_shake_to_change_summary">Secouez le téléphone pour passer au morceau suivant</string>
+    <string name="pref_sound_fade_summary">Atténue les dernières secondes de chaque morceau</string>
+    <string name="settings_section_library">Bibliothèque</string>
+    <string name="settings_section_playback">Lecture</string>
+    <string name="settings_section_about">À propos</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="backup_import_summary">Fusionne une sauvegarde avec ce téléphone. Rien n\'est supprimé.</string>
+    <string name="stats_minutes">%1$d min</string>
+    <string name="stats_empty_title">Aucune écoute pour l\'instant</string>
+    <string name="stats_hero_caption">%1$s · %2$s par jour en moyenne</string>
+    <string name="stats_activity">Activité</string>
+    <string name="stats_activity_none">Aucune écoute sur cette période</string>
+    <string name="stats_activity_selected">%1$s · %2$s</string>
+    <string name="stats_activity_peak">Pic : %1$s · %2$s</string>
+    <plurals name="search_songs_count">
+        <item quantity="one">%d morceau</item>
+        <item quantity="many">%d de morceaux</item>
+        <item quantity="other">%d morceaux</item>
+    </plurals>
+    <plurals name="search_albums_count">
+        <item quantity="one">%d album</item>
+        <item quantity="many">%d d\'albums</item>
+        <item quantity="other">%d albums</item>
+    </plurals>
+
+    <!-- Release readiness: crash reports -->
+    <string name="crash_report_title">Envoyer le rapport de plantage</string>
+    <string name="crash_report_summary">BMusic s\'est fermé de façon inattendue. Partagez les détails pour qu\'il soit corrigé.</string>
+    <string name="crash_report_dismiss">Supprimer le rapport de plantage</string>
+    <string name="crash_report_subject">Rapport de plantage BMusic</string>
+    <string name="crash_report_share">Partager le rapport de plantage</string>
+
+    <!-- Redesign 2 -->
+    <string name="song_row_subtitle">%1$s · %2$s</string>
+    <string name="detail_pause">Pause</string>
+    <string name="done">OK</string>
+    <string name="favourite">Favori</string>
+    <string name="cd_playlist_options">Options de la playlist</string>
+    <string name="playlist_empty_hint">Aucun morceau pour l\'instant.</string>
+    <string name="queue_up_next">À suivre</string>
+    <plurals name="playlist_count">
+        <item quantity="one">%d playlist</item>
+        <item quantity="many">%d playlists</item>
+        <item quantity="other">%d playlists</item>
+    </plurals>
+
+    <!-- Phase 8: folders, transitions, tag editor -->
+    <string name="nav_folders">Dossiers</string>
+    <string name="folder_internal_storage">Stockage interne</string>
+    <string name="folder_sd_card">Carte SD (%1$s)</string>
+    <string name="edit_tags">Modifier les tags</string>
+    <string name="pref_transitions">Transitions entre morceaux</string>
+    <string name="pref_transitions_off_summary">Chaque morceau démarre juste après le précédent</string>
+    <string name="pref_transitions_fade_summary">Le morceau se termine en fondu, puis le suivant démarre en fondu</string>
+    <string name="pref_transitions_crossfade_summary">Le morceau suivant démarre pendant que le précédent s\'estompe</string>
+    <string name="transition_off">Non</string>
+    <string name="transition_fade">Fondu</string>
+    <string name="transition_crossfade">Fondu enchaîné</string>
+    <string name="pref_transition_length">Durée</string>
+    <string name="transition_seconds">%d s</string>
+    <string name="pref_gapless_albums">Albums sans blanc</string>
+    <string name="pref_gapless_albums_summary">Pas de fondu entre les pistes d\'un album lues dans l\'ordre</string>
+    <string name="tag_editor_title">Modifier les tags</string>
+    <string name="tag_editor_save">Enregistrer</string>
+    <string name="tag_title">Titre</string>
+    <string name="tag_artist">Artiste</string>
+    <string name="tag_album">Album</string>
+    <string name="tag_album_artist">Artiste de l\'album</string>
+    <string name="tag_genre">Genre</string>
+    <string name="tag_year">Année</string>
+    <string name="tag_track">Piste</string>
+    <string name="tag_disc">Disque</string>
+    <string name="tag_lyrics">Paroles</string>
+    <string name="tag_change_picture">Changer l\'image</string>
+    <string name="tag_remove_picture">Retirer l\'image</string>
+    <string name="tag_error_year">Indiquez une année comme 1999</string>
+    <string name="tag_error_number">Indiquez un nombre comme 3</string>
+    <string name="tag_error_title">Un titre est nécessaire</string>
+    <string name="tag_editor_unsupported">Ce type de fichier ne peut pas être modifié.</string>
+    <string name="tag_editor_read_failed">Impossible de lire les tags de ce morceau.</string>
+    <string name="tag_editor_saved">Tags enregistrés</string>
+    <string name="tag_editor_save_failed">Échec de l\'enregistrement : %1$s</string>
+    <string name="tag_editor_permission_denied">BMusic n\'a pas été autorisé à modifier ce fichier.</string>
+    <string name="tag_editor_discard_title">Abandonner les modifications ?</string>
+    <string name="tag_editor_discard_body">Vos modifications de ce morceau seront perdues.</string>
+    <string name="tag_editor_discard">Abandonner</string>
+    <string name="tag_editor_keep_editing">Continuer</string>
+    <plurals name="folder_count">
+        <item quantity="one">%d dossier</item>
+        <item quantity="many">%d dossiers</item>
+        <item quantity="other">%d dossiers</item>
+    </plurals>
+
+    <!-- Phase 9: large screens, accessibility, keyboard -->
+    <string name="cd_open_player">ouvrir le lecteur</string>
+    <string name="pane_empty_title">Rien d\'ouvert pour l\'instant</string>
+    <string name="pane_empty_message">Choisissez un album, un artiste ou une playlist pour l\'afficher ici.</string>
+    <string name="seek_position">%1$s sur %2$s</string>
+    <string name="shortcuts_title">Raccourcis clavier</string>
+    <string name="shortcuts_summary">Pour les tablettes et Chromebooks avec clavier</string>
+    <string name="shortcut_play_pause">Lecture ou pause</string>
+    <string name="shortcut_next">Morceau suivant</string>
+    <string name="shortcut_previous">Morceau précédent</string>
+    <string name="shortcut_seek">Avancer / reculer de 10 secondes</string>
+    <string name="shortcut_search">Rechercher</string>
+
+    <!-- Home retouch -->
+    <string name="greeting_morning">Bonjour</string>
+    <string name="greeting_afternoon">Bon après-midi</string>
+    <string name="greeting_evening">Bonsoir</string>
+    <string name="unknown_artist">Artiste inconnu</string>
+</resources>

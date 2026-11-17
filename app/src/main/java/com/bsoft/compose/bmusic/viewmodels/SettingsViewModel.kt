@@ -1,0 +1,37 @@
+package com.bsoft.compose.bmusic.viewmodels
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.bsoft.compose.bmusic.data.playback.TransitionMode
+import com.bsoft.compose.bmusic.data.preferences.AppSettingsPreferences
+import com.bsoft.compose.bmusic.data.serializables.AppSettingsData
+import com.bsoft.compose.bmusic.data.tags.ReplayGainMode
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
+
+@HiltViewModel
+class SettingsViewModel @Inject constructor(
+    private val appSettingsPreferences: AppSettingsPreferences
+) : ViewModel() {
+
+    val settings: StateFlow<AppSettingsData?> = appSettingsPreferences.data.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = null
+    )
+
+    fun setAccentColor(color: Int) = appSettingsPreferences.setAccentColor(color)
+    fun setLanguage(language: String) = appSettingsPreferences.setLanguage(language)
+    fun setRememberLastTab(remember: Boolean) = appSettingsPreferences.setRememberLastTab(remember)
+    fun setHideShortSongs(hide: Boolean) = appSettingsPreferences.setHideShortSongs(hide)
+    fun setShakeToChange(shake: Boolean) = appSettingsPreferences.setShakeToChange(shake)
+    fun setTransitionMode(mode: TransitionMode) = appSettingsPreferences.setTransitionMode(mode.name)
+    fun setTransitionSeconds(seconds: Int) = appSettingsPreferences.setTransitionSeconds(seconds)
+    fun setGaplessAlbums(gapless: Boolean) = appSettingsPreferences.setGaplessAlbums(gapless)
+    fun setReplayGainMode(mode: ReplayGainMode) = appSettingsPreferences.setReplayGainMode(mode.name)
+    fun setLastTab(tab: Int) = appSettingsPreferences.setLastTab(tab)
+    fun setSongSort(sort: String) = appSettingsPreferences.setSongSort(sort)
+}

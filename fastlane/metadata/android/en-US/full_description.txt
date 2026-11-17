@@ -1,0 +1,34 @@
+BMusic plays the music stored on your phone, and only that: no account, no ads, no tracking and no internet connection needed.
+
+LISTEN THE WAY YOU LIKE
+• Gapless playback and smooth fades between songs
+• Volume levelling with ReplayGain, per song or per album
+• Equalizer with presets, plus bass boost, surround and loudness knobs
+• Playback speed from 0.5× to 2×, remembered between sessions
+• Sleep timer that fades out gently, or stops at the end of the song
+
+LYRICS
+• Synced lyrics that follow the song; tap a line to jump to it
+• Reads lyrics stored in MP3, FLAC, Ogg, Opus and M4A files
+• Import .lrc files for any song
+
+YOUR LIBRARY, ORGANISED
+• Fast search across songs, albums, artists and playlists
+• Playlists you can reorder, plus Favourites, Recently added, Most played, Rediscover and Never played
+• Import and export M3U playlists to move them between apps and computers
+
+KNOW YOUR LISTENING
+• Listening time, plays, top songs and top artists for 7 days, 30 days or all time
+• An activity chart of when you listen
+
+EVERYWHERE YOU LISTEN
+• Home-screen widget
+• Lock screen and notification controls with favourite and shuffle buttons
+• Android Auto
+• Resume from the system media controls, even after a restart
+
+SAFE WITH YOUR DATA
+• Back up favourites, playlists, play counts, history and lyrics to a file, and restore them on any phone
+• Nothing leaves your phone unless you share it
+
+Available in English, Spanish, French, Japanese and Chinese.

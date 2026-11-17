@@ -1,0 +1,5 @@
+• Nuevo diseño de búsqueda, ajustes y estadísticas
+• Los efectos de sonido ahora son ruedas giratorias
+• Nivelación de volumen (ReplayGain), importar y exportar M3U
+• Listas en Android Auto y reanudación desde los controles del sistema
+• Aplicación más ligera y rápida

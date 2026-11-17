@@ -1,0 +1,66 @@
+name: Android CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      # gradle/gradle-daemon-jvm.properties asks for a Java 21 toolchain.
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x gradlew
+
+      - name: Compile debug build
+        run: ./gradlew :app:assembleDebug --stacktrace
+
+      - name: Unit tests
+        run: ./gradlew :app:testDebugUnitTest --stacktrace
+
+      # New lint findings fail the build once app/lint-baseline.xml (the accepted, older
+      # findings) is committed; until then lint only reports.
+      - name: Android lint
+        run: |
+          if [ -f app/lint-baseline.xml ]; then
+            ./gradlew :app:lintDebug --stacktrace
+          else
+            echo "::warning::No app/lint-baseline.xml yet: run ./gradlew :app:lintDebug -PcreateLintBaseline and commit it to enforce lint."
+            ./gradlew :app:lintDebug --stacktrace || true
+          fi
+
+      - name: Upload test and lint reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports
+          path: |
+            app/build/reports/tests/
+            app/build/reports/lint-results-debug.html
+          if-no-files-found: ignore
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: ignore

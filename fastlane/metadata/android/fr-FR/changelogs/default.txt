@@ -1,0 +1,5 @@
+• Recherche, réglages et statistiques redessinés
+• Les effets sonores sont désormais des boutons rotatifs
+• Égalisation du volume (ReplayGain), import et export M3U
+• Playlists dans Android Auto, reprise depuis les commandes du système
+• Application plus légère et plus rapide

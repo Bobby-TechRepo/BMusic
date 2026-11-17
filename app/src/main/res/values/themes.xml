@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- AppCompat parent: MainActivity is an AppCompatActivity so in-app language switching works
+         on Android 12 and below. Compose draws all UI; DayNight only sets the window background. -->
+    <style name="Theme.BMusic" parent="Theme.AppCompat.DayNight.NoActionBar" />
+</resources>

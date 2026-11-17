@@ -1,0 +1,33 @@
+BMusic reproduce la música guardada en tu teléfono, y nada más: sin cuenta, sin anuncios, sin rastreo y sin necesidad de internet.
+
+ESCUCHA A TU MANERA
+• Reproducción sin pausas y fundidos suaves entre canciones
+• Nivelación de volumen con ReplayGain, por canción o por álbum
+• Ecualizador con preajustes y ruedas de graves, sonido envolvente y volumen
+• Velocidad de 0,5× a 2×, que se recuerda
+• Temporizador que baja el volumen poco a poco o se detiene al acabar la canción
+
+LETRAS
+• Letras sincronizadas que siguen la canción; toca una línea para saltar a ella
+• Lee las letras guardadas en archivos MP3, FLAC, Ogg, Opus y M4A
+• Importa archivos .lrc para cualquier canción
+
+TU BIBLIOTECA, ORDENADA
+• Búsqueda rápida de canciones, álbumes, artistas y listas
+• Listas que puedes reordenar, además de Favoritos, Añadidas recientemente, Más escuchadas, Redescubre y Nunca escuchadas
+• Importa y exporta listas M3U
+
+CONOCE TU FORMA DE ESCUCHAR
+• Tiempo de escucha, reproducciones, canciones y artistas más escuchados
+• Un gráfico de actividad
+
+EN TODAS PARTES
+• Widget para la pantalla de inicio
+• Controles en la pantalla de bloqueo y en la notificación, con favorito y aleatorio
+• Android Auto
+
+TUS DATOS, A SALVO
+• Copia de seguridad de favoritos, listas, reproducciones, historial y letras en un archivo
+• Nada sale de tu teléfono salvo que lo compartas
+
+Disponible en español, inglés, francés, japonés y chino.

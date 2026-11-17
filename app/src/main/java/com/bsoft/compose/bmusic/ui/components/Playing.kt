@@ -1,0 +1,145 @@
+package com.bsoft.compose.bmusic.ui.components
+
+import android.graphics.Bitmap
+import android.util.Size
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.media3.common.Player
+import com.bsoft.compose.bmusic.R
+import com.bsoft.compose.bmusic.data.states.PlayingState
+import com.bsoft.compose.bmusic.data.states.QueueState
+import com.bsoft.compose.bmusic.ui.theme.BMusicTheme
+import com.bsoft.compose.bmusic.utils.Util
+import com.bsoft.compose.bmusic.utils.toTimeFormat
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Playing(
+    modifier: Modifier = Modifier, playingState: PlayingState, queueState: QueueState,
+    isFavorite: Boolean = false,
+    openPlaylist: ()-> Unit = {},
+    previous: ()-> Unit = {}, rewind: ()-> Unit = {},
+    next: ()-> Unit = {}, forward: ()-> Unit = {},
+    playToggled: ()-> Unit = {},
+    repeatToggled: (mode: @Player.RepeatMode Int)-> Unit = {}, shuffleToggled: ()-> Unit = {},
+    favouriteToggled: ()-> Unit = {}, seek: (Long)-> Unit = {}
+){
+    val colorStops = arrayOf( 0.0f to Color.Transparent, 0.3f to MaterialTheme.colorScheme.surface.copy(alpha = 0.5f), 0.55f to MaterialTheme.colorScheme.surface)
+    val context = LocalContext.current
+
+    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+    LaunchedEffect(queueState.current) {
+        bitmap = Util.loadArtwork(context, queueState.current?.mediaUri, Size(400, 400))
+    }
+
+    Box(modifier = modifier.fillMaxWidth().height(450.dp)){
+        if(bitmap == null){
+            Image(modifier = Modifier.fillMaxWidth().align(Alignment.TopCenter), painter = painterResource(id = R.drawable.lady), contentScale = ContentScale.FillWidth, contentDescription = null)
+        }else{
+            BitmapImage(modifier = Modifier.fillMaxWidth().aspectRatio(1f).align(Alignment.TopCenter), bitmap = bitmap as Bitmap, contentScale = ContentScale.Crop)
+        }
+        Box(modifier = Modifier.fillMaxSize().background(Brush.verticalGradient(colorStops = colorStops)))
+        Column(modifier = Modifier.padding(20.dp).align(Alignment.BottomCenter), horizontalAlignment = Alignment.CenterHorizontally) {
+            Row(modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+                Surface(modifier = Modifier.padding(4.dp), shape = RoundedCornerShape(30.dp), shadowElevation = 2.dp) {
+                    FavouriteToggle(active = isFavorite) { favouriteToggled() }
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Surface(modifier = Modifier.padding(4.dp), shape = RoundedCornerShape(30.dp), shadowElevation = 2.dp) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            RepeatToggle(mode = queueState.repeatMode){ repeatToggled(it) }
+                            ShuffleToggle(active = queueState.shuffle) { shuffleToggled() }
+                        }
+                    }
+                    Surface(modifier = Modifier.padding(4.dp), shape = RoundedCornerShape(30.dp), shadowElevation = 2.dp) {
+                        IconButton(onClick = { openPlaylist() },  colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.surfaceContainer, contentColor = MaterialTheme.colorScheme.primary)) {
+                            Icon(imageVector = ImageVector.vectorResource(R.drawable.fluent__music_note_2_play_20_regular), contentDescription = null)
+                        }
+                    }
+                }
+            }
+            Column(horizontalAlignment = Alignment.CenterHorizontally){
+                Text(queueState.current?.title ?: stringResource(R.string.unknown) , fontSize = 16.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary, overflow = TextOverflow.MiddleEllipsis)
+                Text("${queueState.current?.artist ?: stringResource(R.string.unknown)}: ${queueState.current?.album ?: stringResource(R.string.unknown)}", fontSize = 12.sp, fontWeight = FontWeight.Light, overflow = TextOverflow.MiddleEllipsis)
+            }
+            Row(modifier = Modifier.padding(vertical = 10.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                SmallFloatingActionButton(onClick = { previous() }) {
+                    Icon(modifier = Modifier.size(18.dp), imageVector = ImageVector.vectorResource( R.drawable.fluent__previous_24_filled), contentDescription = null)
+                }
+                SmallFloatingActionButton(onClick = { rewind() }) {
+                    Icon(modifier = Modifier.size(18.dp), imageVector = ImageVector.vectorResource( R.drawable.fluent__rewind_24_filled), contentDescription = null)
+                }
+                FloatingActionButton (onClick = {playToggled()}, shape = CircleShape, modifier = Modifier.size(80.dp)) {
+                    if(playingState.playing){
+                        Icon(modifier = Modifier.size(40.dp), imageVector = ImageVector.vectorResource( R.drawable.fluent__pause_24_filled), contentDescription = null)
+                    }else{
+                        Icon(modifier = Modifier.size(40.dp), imageVector = ImageVector.vectorResource( R.drawable.fluent__play_24_filled), contentDescription = null)
+                    }
+                }
+                SmallFloatingActionButton(onClick = { forward() }) {
+                    Icon(modifier = Modifier.size(18.dp), imageVector = ImageVector.vectorResource( R.drawable.fluent__fast_forward_24_filled), contentDescription = null)
+                }
+                SmallFloatingActionButton(onClick = { next() }) {
+                    Icon(modifier = Modifier.size(18.dp), imageVector = ImageVector.vectorResource( R.drawable.fluent__next_24_filled), contentDescription = null)
+                }
+            }
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
+                Text(playingState.position.toTimeFormat(), fontSize = 12.sp, fontWeight = FontWeight.Light)
+                Text((queueState.current?.duration ?: 0).toTimeFormat(), fontSize = 12.sp, fontWeight = FontWeight.Light)
+            }
+            Seeker(playingState = playingState, queueState = queueState) {
+                seek(it)
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun PlayingPreview(){
+    BMusicTheme {
+        Playing(playingState = PlayingState(), queueState = QueueState())
+    }
+}

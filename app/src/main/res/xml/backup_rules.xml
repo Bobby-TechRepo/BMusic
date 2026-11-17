@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Android Auto Backup on Android 11 and below (Android 12+ reads data_extraction_rules.xml).
+    Backed up: settings, equalizer, playlists, favourites, play counts, listening history and
+    imported lyrics. Left out: the playing queue and position, which refer to this phone's
+    MediaStore IDs, crash reports and the widget's last-song copy.
+-->
+<full-backup-content>
+    <include domain="file" path="datastore/app_settings.json" />
+    <include domain="file" path="datastore/equalizer_preferences.json" />
+    <include domain="file" path="lyrics" />
+    <include domain="database" path="." />
+</full-backup-content>

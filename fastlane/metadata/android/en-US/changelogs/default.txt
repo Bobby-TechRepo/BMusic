@@ -1,0 +1,5 @@
+• Redesigned search, settings and listening stats
+• Sound effects are now rotary knobs: turn them to adjust
+• Volume levelling (ReplayGain), M3U import and export
+• Playlists in Android Auto, resume from the system media controls
+• Smaller, faster app

@@ -1,0 +1,382 @@
+<resources>
+    <string name="app_name">BMusic</string>
+
+    <!-- General -->
+    <string name="initializing">初期化中…</string>
+    <string name="fetching_songs">曲を取得しています。しばらくお待ちください…</string>
+    <string name="unknown">不明</string>
+    <string name="back">戻る</string>
+    <string name="cancel">キャンセル</string>
+    <string name="save">保存</string>
+    <string name="play">再生</string>
+    <string name="shuffle">シャッフル</string>
+    <string name="edit">編集</string>
+    <string name="delete">削除</string>
+    <string name="remove">削除</string>
+    <string name="rename">名前を変更</string>
+    <string name="open">開く</string>
+    <string name="add_songs">曲を追加</string>
+    <string name="confirm">確認</string>
+    <string name="dismiss">閉じる</string>
+
+    <!-- Home / Navigation -->
+    <string name="nav_playlists">プレイリスト</string>
+    <string name="nav_songs">曲</string>
+    <string name="nav_albums">アルバム</string>
+    <string name="nav_artists">アーティスト</string>
+
+    <!-- Settings -->
+    <string name="settings">設定</string>
+    <string name="appearance">外観</string>
+    <string name="accent_color">アクセントカラー</string>
+    <string name="general">全般</string>
+    <string name="language">言語</string>
+    <string name="lang_english">英語</string>
+    <string name="lang_japanese">日本語</string>
+    <string name="lang_spanish">スペイン語</string>
+    <string name="lang_french">フランス語</string>
+    <string name="lang_chinese">中国語</string>
+    <string name="pref_remember_last_tab">最後に開いたタブを記憶する</string>
+    <string name="pref_hide_short_songs">短い曲を非表示にする（1分未満）</string>
+    <string name="pref_shake_to_change">振って曲を変更</string>
+    <string name="pref_sound_fade">曲の終了時にフェードアウト</string>
+
+    <!-- Playing Screen -->
+    <string name="now_playing">再生中</string>
+    <string name="queue">キュー</string>
+    <string name="equalizer">イコライザー</string>
+
+    <!-- Playlists -->
+    <string name="playlist_favourites">お気に入り</string>
+    <string name="playlist_recently_added">最近追加された曲</string>
+    <string name="playlist_most_played">よく聴く曲</string>
+    <string name="playlist_recently_played">最近再生した曲</string>
+    <string name="custom_playlists">カスタムプレイリスト</string>
+    <string name="search_songs">曲を検索</string>
+    <string name="songs_count">曲(%d)</string>
+    <string name="playlist_details">%1$d 曲 - %2$s</string>
+
+    <!-- Playlist Form -->
+    <string name="create_playlist">プレイリストを作成</string>
+    <string name="add_custom_playlist">カスタムプレイリストを追加</string>
+    <string name="playlist_name">プレイリスト名</string>
+    <string name="specify_playlist_name">プレイリスト名を入力してください</string>
+    <string name="btn_create">作成</string>
+
+    <!-- Components -->
+    <string name="song_s_count">%d 曲</string>
+    <string name="artist_album_details">%1$d アルバム - %2$d 曲</string>
+    <string name="play_all">すべて再生</string>
+    <string name="filter_song_list">曲リストをフィルタリング</string>
+    <string name="selected_count">選択済み: %d</string>
+    <string name="artist_label">アーティスト: %s</string>
+    <string name="album_label">アルバム: %s</string>
+    <string name="song_detail_label">%1$s • %2$s</string>
+
+    <!-- Status / Error Messages -->
+    <string name="error_unexpected">予期しないエラーが発生しました。もう一度お試しください</string>
+    <string name="error_album_not_found">ID %d のアルバムが見つかりません</string>
+    <string name="error_artist_not_found">ID %d のアーティストが見つかりません</string>
+    <string name="error_storage_permission">曲リストを読み込むにはストレージ権限が必要です</string>
+
+    <!-- Dialogs -->
+    <string name="delete_confirmation_title">削除の確認</string>
+    <string name="delete_playlist_message">%s プレイリストを削除してもよろしいですか？</string>
+
+    <!-- Playback Service Browsable Items -->
+    <string name="library_root">ライブラリ</string>
+    <string name="songs_browsable">曲</string>
+    <string name="albums_browsable">アルバム</string>
+    <string name="artists_browsable">アーティスト</string>
+
+    <!-- Phase 1: permission, error and empty states -->
+    <string name="permission_title">音楽へのアクセスを許可</string>
+    <string name="permission_body">音楽を表示・再生するには、このデバイスの音声ファイルを読み取る権限が必要です。</string>
+    <string name="permission_grant">アクセスを許可</string>
+    <string name="open_settings">設定を開く</string>
+    <string name="retry">再試行</string>
+    <string name="error_title">問題が発生しました</string>
+    <string name="library_empty_title">音楽が見つかりません</string>
+    <string name="library_empty_body">このデバイスに音声ファイルをコピーすると、ここに自動的に表示されます。</string>
+    <string name="error_cannot_play">「%1$s」を再生できません。スキップします。</string>
+    <string name="error_cannot_play_generic">この曲は再生できません。</string>
+    <string name="player_unavailable">プレーヤーに接続できません。もう一度お試しください。</string>
+    <string name="cd_play">再生</string>
+    <string name="cd_pause">一時停止</string>
+    <string name="cd_next">次の曲</string>
+    <string name="cd_previous">前の曲</string>
+    <string name="cd_forward">10秒早送り</string>
+    <string name="cd_rewind">10秒巻き戻し</string>
+
+    <!-- Phase 3: song menu, queue, playlists, search, sorting, accessibility -->
+    <string name="accent_dynamic">壁紙に合わせる</string>
+    <string name="add_to_favourites">お気に入りに追加</string>
+    <string name="remove_from_favourites">お気に入りから削除</string>
+    <string name="add_to_playlist">プレイリストに追加</string>
+    <string name="add_to_queue">キューに追加</string>
+    <string name="added_to_playlist">%1$s に追加しました</string>
+    <string name="added_to_queue">「%1$s」をキューに追加しました</string>
+    <string name="playing_next">「%1$s」を次に再生します</string>
+    <string name="play_next">次に再生</string>
+    <string name="go_to_album">アルバムへ移動</string>
+    <string name="go_to_artist">アーティストへ移動</string>
+    <string name="share">共有</string>
+    <string name="remove_from_playlist">プレイリストから削除</string>
+    <string name="new_playlist">新しいプレイリスト</string>
+    <string name="rename_playlist">プレイリスト名を変更</string>
+    <string name="no_custom_playlists">プレイリストはまだありません。＋をタップして作成します。</string>
+    <string name="select_all">すべて選択</string>
+    <string name="save_as_playlist">プレイリストとして保存</string>
+    <string name="saved_as_playlist">%1$s として保存しました</string>
+    <string name="clear_queue">キューをクリア</string>
+    <string name="clear_queue_message">キューからすべての曲を削除しますか？再生は停止します。</string>
+    <string name="search">検索</string>
+    <string name="search_library_hint">曲・アルバム・アーティスト・プレイリストを検索</string>
+    <string name="search_no_results">「%1$s」に一致する結果はありません</string>
+    <string name="clear_search">検索をクリア</string>
+    <string name="sort_by">並べ替え: %1$s</string>
+    <string name="sort_title">タイトル</string>
+    <string name="sort_artist">アーティスト</string>
+    <string name="sort_album">アルバム</string>
+    <string name="sort_date_added">追加日（新しい順）</string>
+    <string name="sort_duration">長い順</string>
+    <string name="playing_tab">再生中</string>
+    <string name="language_system_default">システムのデフォルト</string>
+    <string name="cd_now_playing">再生中</string>
+    <string name="cd_song_options">曲のオプション</string>
+    <string name="cd_remove_from_queue">キューから削除</string>
+    <string name="cd_reorder">ドラッグで並べ替え</string>
+    <string name="cd_repeat_off">リピートオフ</string>
+    <string name="cd_repeat_all">全曲リピート</string>
+    <string name="cd_repeat_one">1曲リピート</string>
+    <string name="cd_shuffle_on">シャッフルオン</string>
+    <string name="cd_shuffle_off">シャッフルオフ</string>
+    <plurals name="played_times">
+        <item quantity="other">%d回再生</item>
+    </plurals>
+    <plurals name="queue_count">
+        <item quantity="other">キュー内 %d 曲</item>
+    </plurals>
+    <plurals name="song_count">
+        <item quantity="other">%d 曲</item>
+    </plurals>
+    <plurals name="search_section_songs">
+        <item quantity="other">曲（%d）</item>
+    </plurals>
+    <plurals name="search_section_albums">
+        <item quantity="other">アルバム（%d）</item>
+    </plurals>
+    <plurals name="search_section_artists">
+        <item quantity="other">アーティスト（%d）</item>
+    </plurals>
+    <plurals name="search_section_playlists">
+        <item quantity="other">プレイリスト（%d）</item>
+    </plurals>
+
+    <!-- Phase 4a: sleep timer, speed, sound effects, stats, backup -->
+    <string name="playback_speed">再生速度</string>
+    <string name="sleep_timer">スリープタイマー</string>
+    <string name="sleep_timer_on">スリープタイマー作動中</string>
+    <string name="sleep_timer_stops_in">%1$s 後に停止します</string>
+    <string name="sleep_timer_add_10">+10分</string>
+    <string name="sleep_timer_off">オフにする</string>
+    <string name="sleep_timer_after_song_active">この曲が終わると停止します</string>
+    <string name="sleep_timer_minutes">%1$d分</string>
+    <string name="sleep_timer_end_of_song">曲の終わり</string>
+    <string name="sound_effects">サウンドエフェクト</string>
+    <string name="effects_unsupported">この端末は追加のサウンドエフェクトに対応していません。</string>
+    <string name="bass_boost">低音ブースト</string>
+    <string name="virtualizer">サラウンド</string>
+    <string name="loudness_boost">音量ブースト</string>
+    <string name="percent_value">%1$d%%</string>
+    <string name="stats_title">再生統計</string>
+    <string name="stats_period_week">7日間</string>
+    <string name="stats_period_month">30日間</string>
+    <string name="stats_period_all">全期間</string>
+    <string name="stats_plays">再生回数</string>
+    <string name="stats_time">再生時間</string>
+    <string name="stats_songs">曲数</string>
+    <string name="stats_top_songs">よく聴いた曲</string>
+    <string name="stats_top_artists">よく聴いたアーティスト</string>
+    <string name="stats_empty">音楽を再生するとここに統計が表示されます。30秒以上聴いた曲がカウントされます。</string>
+    <string name="stats_hours_minutes">%1$d時間%2$d分</string>
+    <string name="backup_title">バックアップ</string>
+    <string name="backup_description">お気に入り・プレイリスト・再生回数・再生履歴をファイルに保存し、この端末や別の端末で復元できます。</string>
+    <string name="backup_export">バックアップ</string>
+    <string name="backup_import">復元</string>
+    <string name="backup_done">バックアップを保存しました：お気に入り %1$d 件、プレイリスト %2$d 件。</string>
+    <string name="backup_invalid_file">このファイルは BMusic のバックアップではありません。</string>
+    <string name="backup_failed">ファイルで問題が発生しました。変更はありません。</string>
+    <string name="restore_done">お気に入り %1$d 件、新しいプレイリスト %2$d 件、プレイリストの曲 %3$d 曲を復元しました。</string>
+    <plurals name="stats_play_count">
+        <item quantity="other">%d回</item>
+    </plurals>
+    <plurals name="restore_missing">
+        <item quantity="other">バックアップの %d 曲はこの端末にありません。</item>
+    </plurals>
+
+    <!-- Phase 4b: lyrics, smart playlists, widget -->
+    <string name="lyrics">歌詞</string>
+    <string name="lyrics_nothing_playing">再生中の曲はありません</string>
+    <string name="lyrics_none">この曲の歌詞はありません</string>
+    <string name="lyrics_none_hint">曲ファイルに保存された歌詞は自動で表示されます。この曲用の .lrc ファイルを読み込むこともできます。</string>
+    <string name="lyrics_import">.lrc ファイルを読み込む</string>
+    <string name="lyrics_replace">歌詞を置き換える</string>
+    <string name="lyrics_remove_imported">読み込んだ歌詞を削除</string>
+    <string name="lyrics_import_failed">このファイルには BMusic が読める歌詞がありません。</string>
+    <string name="playlist_rediscover">再発見</string>
+    <string name="playlist_never_played">未再生</string>
+    <string name="widget_name">再生中</string>
+    <string name="widget_description">再生中の曲と、再生・前へ・次へボタン。</string>
+    <string name="widget_idle">タップして BMusic を開く</string>
+    <plurals name="restore_lyrics">
+        <item quantity="other">%d 曲の歌詞を復元しました。</item>
+    </plurals>
+
+    <!-- Phase 5: ReplayGain, M3U, Android Auto playlists -->
+    <string name="pref_replay_gain">音量の均一化（ReplayGain）</string>
+    <string name="pref_replay_gain_summary">ReplayGain タグを使って曲の音量をそろえます。タグのない曲はそのまま再生されます。</string>
+    <string name="replay_gain_off">オフ</string>
+    <string name="replay_gain_track">曲ごと</string>
+    <string name="replay_gain_album">アルバムごと</string>
+    <string name="playlists_browsable">プレイリスト</string>
+    <string name="export_m3u">M3U として書き出す</string>
+    <string name="import_m3u">M3U を読み込む</string>
+    <string name="m3u_exported">プレイリストを書き出しました。</string>
+    <string name="m3u_invalid_file">このファイルは M3U プレイリストではありません。</string>
+    <string name="m3u_no_songs_found">そのプレイリストの曲はこの端末にありません。</string>
+    <string name="m3u_failed">ファイルで問題が発生しました。変更はありません。</string>
+    <plurals name="m3u_imported">
+        <item quantity="other">「%1$s」を %2$d 曲で作成しました。</item>
+    </plurals>
+    <plurals name="m3u_missing">
+        <item quantity="other">ファイルの %d 曲はこの端末にありません。</item>
+    </plurals>
+
+    <!-- Redesign: search, settings, sound effect knobs, stats -->
+    <string name="effects_knob_hint">ノブを回して調整します。ダブルタップでリセット。</string>
+    <string name="search_filter_all">すべて</string>
+    <string name="search_filter_songs">曲</string>
+    <string name="search_filter_albums">アルバム</string>
+    <string name="search_filter_artists">アーティスト</string>
+    <string name="search_filter_playlists">プレイリスト</string>
+    <string name="search_filter_count">%1$s · %2$d</string>
+    <string name="search_top_result">トップの結果</string>
+    <string name="search_see_all">すべて表示</string>
+    <string name="search_recent">最近の検索</string>
+    <string name="search_clear_history">消去</string>
+    <string name="search_empty_title">ライブラリを検索</string>
+    <string name="search_empty_message">入力すると曲・アルバム・アーティスト・プレイリストが見つかります。</string>
+    <string name="search_no_results_hint">つづりを確認するか、語を減らしてみてください。</string>
+    <string name="search_type_song">曲 · %1$s</string>
+    <string name="search_type_album">アルバム · %1$s</string>
+    <string name="search_type_artist">アーティスト</string>
+    <string name="search_song_detail">%1$s · %2$s</string>
+    <string name="cd_remove_recent_search">「%1$s」を最近の検索から削除</string>
+    <string name="accent_custom">選んだ色</string>
+    <string name="pref_remember_last_tab_summary">前回使ったタブで開きます</string>
+    <string name="pref_hide_short_songs_summary">着信音やボイスメモをライブラリから除外します</string>
+    <string name="pref_shake_to_change_summary">端末を振ると次の曲へ移ります</string>
+    <string name="pref_sound_fade_summary">曲の最後の数秒をフェードアウトします</string>
+    <string name="settings_section_library">ライブラリ</string>
+    <string name="settings_section_playback">再生</string>
+    <string name="settings_section_about">情報</string>
+    <string name="about_version">バージョン %1$s</string>
+    <string name="backup_import_summary">バックアップをこの端末に統合します。何も削除されません。</string>
+    <string name="stats_minutes">%1$d分</string>
+    <string name="stats_empty_title">まだ再生がありません</string>
+    <string name="stats_hero_caption">%1$s · 1日平均 %2$s</string>
+    <string name="stats_activity">アクティビティ</string>
+    <string name="stats_activity_none">この期間の再生はありません</string>
+    <string name="stats_activity_selected">%1$s · %2$s</string>
+    <string name="stats_activity_peak">最多: %1$s · %2$s</string>
+    <plurals name="search_songs_count">
+        <item quantity="other">%d 曲</item>
+    </plurals>
+    <plurals name="search_albums_count">
+        <item quantity="other">%d 枚のアルバム</item>
+    </plurals>
+
+    <!-- Release readiness: crash reports -->
+    <string name="crash_report_title">クラッシュレポートを送信</string>
+    <string name="crash_report_summary">BMusic が予期せず終了しました。修正のために詳細を共有してください。</string>
+    <string name="crash_report_dismiss">クラッシュレポートを削除</string>
+    <string name="crash_report_subject">BMusic クラッシュレポート</string>
+    <string name="crash_report_share">クラッシュレポートを共有</string>
+
+    <!-- Redesign 2 -->
+    <string name="song_row_subtitle">%1$s · %2$s</string>
+    <string name="detail_pause">一時停止</string>
+    <string name="done">完了</string>
+    <string name="favourite">お気に入り</string>
+    <string name="cd_playlist_options">プレイリストのオプション</string>
+    <string name="playlist_empty_hint">まだ曲がありません。</string>
+    <string name="queue_up_next">次に再生</string>
+    <plurals name="playlist_count">
+        <item quantity="other">%d 件のプレイリスト</item>
+    </plurals>
+
+    <!-- Phase 8: folders, transitions, tag editor -->
+    <string name="nav_folders">フォルダ</string>
+    <string name="folder_internal_storage">内部ストレージ</string>
+    <string name="folder_sd_card">SD カード (%1$s)</string>
+    <string name="edit_tags">タグを編集</string>
+    <string name="pref_transitions">曲のつなぎ</string>
+    <string name="pref_transitions_off_summary">前の曲のすぐ後に次の曲を再生</string>
+    <string name="pref_transitions_fade_summary">終わる曲をフェードアウトし、次の曲をフェードイン</string>
+    <string name="pref_transitions_crossfade_summary">終わる曲のフェードアウト中に次の曲を開始</string>
+    <string name="transition_off">オフ</string>
+    <string name="transition_fade">フェード</string>
+    <string name="transition_crossfade">クロスフェード</string>
+    <string name="pref_transition_length">長さ</string>
+    <string name="transition_seconds">%d 秒</string>
+    <string name="pref_gapless_albums">アルバムはギャップレス</string>
+    <string name="pref_gapless_albums_summary">アルバムを曲順に再生するときはクロスフェードしない</string>
+    <string name="tag_editor_title">タグを編集</string>
+    <string name="tag_editor_save">保存</string>
+    <string name="tag_title">タイトル</string>
+    <string name="tag_artist">アーティスト</string>
+    <string name="tag_album">アルバム</string>
+    <string name="tag_album_artist">アルバムアーティスト</string>
+    <string name="tag_genre">ジャンル</string>
+    <string name="tag_year">年</string>
+    <string name="tag_track">トラック</string>
+    <string name="tag_disc">ディスク</string>
+    <string name="tag_lyrics">歌詞</string>
+    <string name="tag_change_picture">画像を変更</string>
+    <string name="tag_remove_picture">画像を削除</string>
+    <string name="tag_error_year">1999 のような年を入力</string>
+    <string name="tag_error_number">3 のような数字を入力</string>
+    <string name="tag_error_title">タイトルが必要です</string>
+    <string name="tag_editor_unsupported">この種類のファイルは編集できません。</string>
+    <string name="tag_editor_read_failed">この曲のタグを読み取れませんでした。</string>
+    <string name="tag_editor_saved">タグを保存しました</string>
+    <string name="tag_editor_save_failed">タグを保存できませんでした: %1$s</string>
+    <string name="tag_editor_permission_denied">このファイルの変更が許可されませんでした。</string>
+    <string name="tag_editor_discard_title">変更を破棄しますか？</string>
+    <string name="tag_editor_discard_body">この曲への変更は失われます。</string>
+    <string name="tag_editor_discard">破棄</string>
+    <string name="tag_editor_keep_editing">編集を続ける</string>
+    <plurals name="folder_count">
+        <item quantity="other">%d 個のフォルダ</item>
+    </plurals>
+
+    <!-- Phase 9: large screens, accessibility, keyboard -->
+    <string name="cd_open_player">プレーヤーを開く</string>
+    <string name="pane_empty_title">まだ何も開いていません</string>
+    <string name="pane_empty_message">アルバム、アーティスト、プレイリストを選ぶとここに表示されます。</string>
+    <string name="seek_position">%2$s 中 %1$s</string>
+    <string name="shortcuts_title">キーボード ショートカット</string>
+    <string name="shortcuts_summary">キーボード付きのタブレットや Chromebook 向け</string>
+    <string name="shortcut_play_pause">再生 / 一時停止</string>
+    <string name="shortcut_next">次の曲</string>
+    <string name="shortcut_previous">前の曲</string>
+    <string name="shortcut_seek">10 秒進む / 戻る</string>
+    <string name="shortcut_search">検索</string>
+
+    <!-- Home retouch -->
+    <string name="greeting_morning">おはようございます</string>
+    <string name="greeting_afternoon">こんにちは</string>
+    <string name="greeting_evening">こんばんは</string>
+    <string name="unknown_artist">不明なアーティスト</string>
+</resources>
