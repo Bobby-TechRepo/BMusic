@@ -90,27 +90,24 @@ fun BottomControl(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                    FilledIconButton(
-                        modifier = Modifier.size(44.dp),
-                        onClick = playToggle,
-                        shape = CircleShape,
-                        colors = IconButtonDefaults.filledIconButtonColors(containerColor = scheme.primary, contentColor = scheme.onPrimary)
-                    ) {
+                FilledIconButton(
+                    modifier = Modifier.size(44.dp),
+                    onClick = playToggle,
+                    shape = CircleShape,
+                    colors = IconButtonDefaults.filledIconButtonColors(containerColor = scheme.primary, contentColor = scheme.onPrimary)
+                ) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(if (state.playing) R.drawable.ms_pause_fill1 else R.drawable.ms_play_arrow_fill1),
+                        contentDescription = stringResource(if (state.playing) R.string.cd_pause else R.string.cd_play)
+                    )
+                }
+                if (onNext != null) {
+                    IconButton(onClick = onNext) {
                         Icon(
-                            imageVector = ImageVector.vectorResource(if (state.playing) R.drawable.ms_pause_fill1 else R.drawable.ms_play_arrow_fill1),
-                            contentDescription = stringResource(if (state.playing) R.string.cd_pause else R.string.cd_play)
-                        )
-                    }
-                    if (onNext != null) {
-                        //IconButton(onClick = onNext) {
-                        Icon(
-                            modifier = Modifier.clickable{ onNext() },
                             imageVector = ImageVector.vectorResource(R.drawable.ms_skip_next_fill1),
                             tint = scheme.onSurface,
                             contentDescription = stringResource(R.string.cd_next)
                         )
-                        //}
                     }
                 }
             }
@@ -120,7 +117,7 @@ fun BottomControl(
                     .padding(horizontal = 18.dp)
                     .padding(bottom = 6.dp)
                     .fillMaxWidth()
-                    .height(1.dp)
+                    .height(3.dp)
                     .clip(CircleShape)
                     .background(scheme.onSurface.copy(alpha = 0.10f))
             ) {

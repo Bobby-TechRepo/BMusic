@@ -73,7 +73,15 @@ fun HomeScreen(
     onTabChanged: (Int) -> Unit = {},
     onSongSortChanged: (SongSort) -> Unit = {},
     openSearch: () -> Unit = {},
-    openSongMenu: (SongMenuRequest) -> Unit = {}
+    openSongMenu: (SongMenuRequest) -> Unit = {},
+    /**
+     * Tablet layout: Home sits in the phone-sized library section. The navigation rail belongs to
+     * the whole layout (it drives [requestedTab]), Stats and Settings live on the player, and
+     * the player is always on screen, so there are no chips, header buttons or mini player.
+     */
+    tabletLibrary: Boolean = false,
+    requestedTab: Int? = null,
+    onPageShown: (Int) -> Unit = {}
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -91,7 +99,12 @@ fun HomeScreen(
             }
         }
     }
+    LaunchedEffect(requestedTab) {
+        val tab = requestedTab ?: return@LaunchedEffect
+        if (tab in HomeDestination.entries.indices && tab != pagerState.currentPage) pagerState.scrollToPage(tab)
+    }
     LaunchedEffect(pagerState.currentPage) {
+        onPageShown(pagerState.currentPage)
         currentDestination = HomeDestination.entries[pagerState.currentPage]
         if (restoredTab && settings?.rememberLastTab == true && settings.lastTab != pagerState.currentPage) {
             onTabChanged(pagerState.currentPage)
@@ -123,7 +136,7 @@ fun HomeScreen(
     val adaptiveInfo = currentWindowAdaptiveInfoV2()
     
     // Force Navigation Rail for Tablet and None for Mobile (to use Tabs instead)
-    val navSuiteType = if (isMobile) {
+    val navSuiteType = if (isMobile || tabletLibrary) {
         NavigationSuiteType.None
     } else {
         NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(adaptiveInfo)
@@ -160,8 +173,8 @@ fun HomeScreen(
             topBar = {
                 HomeHeader(
                     modifier = Modifier.statusBarsPadding(),
-                    onStats = { toScreen(Route.Stats) },
-                    onSettings = { toScreen(Route.Settings) },
+                    onStats = if (tabletLibrary) null else ({ toScreen(Route.Stats) }),
+                    onSettings = if (tabletLibrary) null else ({ toScreen(Route.Settings) }),
                     onSearch = openSearch
                 )
             },
@@ -181,7 +194,7 @@ fun HomeScreen(
                 }
             },
             bottomBar = {
-                BottomControl(
+                if (!tabletLibrary) BottomControl(
                     state = playState,
                     queueState = queueState,
                     clicked = { toScreen(Route.Playing) },
@@ -193,7 +206,7 @@ fun HomeScreen(
         ) { contentPadding ->
             Column(modifier = Modifier.padding(contentPadding)) {
                 // Phones: pill tabs. Tablets use the navigation rail instead.
-                if (isMobile) {
+                if (isMobile && !tabletLibrary) {
                     HomeTabChips(
                         selected = pagerState.currentPage,
                         onSelect = { index -> coroutineScope.launch { pagerState.animateScrollToPage(index) } }
@@ -204,7 +217,7 @@ fun HomeScreen(
                 HorizontalPager(
                     modifier = Modifier.fillMaxSize().weight(1f).testTag(TestTags.HOME_PAGER),
                     state = pagerState,
-                    userScrollEnabled = isMobile // Only allow swipe on mobile
+                    userScrollEnabled = isMobile && !tabletLibrary // Only allow swipe on phones
                 ) { page ->
                     when (page) {
                         0 -> PlaylistsPage(

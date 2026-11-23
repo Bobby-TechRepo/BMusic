@@ -63,7 +63,7 @@ fun PresetsView(modifier: Modifier = Modifier, selectedBand: Short = 0, customVa
         }
 
         // Preset buttons in rows
-        FlowRow(modifier = Modifier.fillMaxWidth(),
+        FlowRow(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
         ) {

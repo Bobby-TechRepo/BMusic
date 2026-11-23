@@ -1,39 +1,38 @@
 package com.bsoft.compose.bmusic.utils
 
 /*
- * Two-pane library on large screens (tablets, unfolded foldables, desktop windows): Home stays on
- * the left and an album, artist or playlist opens on the right, with its own small back stack.
- * These functions move screens between the main back stack and that pane when the window is
- * resized, so nothing the user opened is lost. Generic so they can be unit-tested without
- * Android or Navigation types.
+ * Tablet layout (landscape, >= 840 dp wide): the library lives in a phone-sized section on the
+ * left, and the right section shows the player, or Settings / Listening stats swapped in for it.
+ * Each side keeps its own back stack. These functions decide which side a screen opens on and
+ * move screens between the single phone stack and the two tablet stacks when the window changes
+ * size, so nothing the user opened is lost. Generic so they can be unit-tested without Android or
+ * Navigation types.
  */
 
-/** Result of moving screens between the main stack and the detail pane. */
-data class PaneStacks<T>(val root: List<T>, val pane: List<T>)
+/** The two back stacks of the tablet layout. */
+data class TabletStacks<T>(val left: List<T>, val right: List<T>)
 
 /**
- * The window became wide: the detail screens directly above Home (and only those) move into the
- * pane. Anything else on top (Settings, the player...) stays full screen, and so does
- * everything below it.
+ * The window became wide. Library screens stay on the left (with Home at the bottom). The player
+ * always sits at the bottom of the right stack, and the most recent Settings or Stats screen, if
+ * one was open, is swapped in on top of it.
  */
-fun <T> moveDetailsIntoPane(root: List<T>, pane: List<T>, home: T, isDetail: (T) -> Boolean): PaneStacks<T> {
-    if (root.firstOrNull() != home || root.size < 2) return PaneStacks(root, pane)
-    val above = root.drop(1)
-    if (!above.all(isDetail)) return PaneStacks(root, pane)
-    return PaneStacks(listOf(home), pane + above)
+fun <T> splitForTablet(root: List<T>, home: T, player: T, isRightSide: (T) -> Boolean): TabletStacks<T> {
+    val library = root.filterNot(isRightSide)
+    val left = if (library.firstOrNull() == home) library else listOf(home) + library.filter { it != home }
+    val swapped = root.lastOrNull { isRightSide(it) && it != player }
+    return TabletStacks(left, listOf(player) + listOfNotNull(swapped))
 }
 
 /**
- * The window became narrow: the pane's screens go back onto the main stack, right above Home,
- * under anything that was opened full screen on top.
+ * The window became narrow: everything goes back onto one stack, with a swapped-in Settings or
+ * Stats screen on top. The resting player is dropped — on a phone it opens from the mini player.
  */
-fun <T> movePaneIntoRoot(root: List<T>, pane: List<T>, home: T): PaneStacks<T> {
-    if (pane.isEmpty()) return PaneStacks(root, pane)
-    val homeIndex = root.indexOf(home)
-    if (homeIndex < 0) return PaneStacks(root + pane, emptyList())
-    val merged = root.subList(0, homeIndex + 1) + pane + root.subList(homeIndex + 1, root.size)
-    return PaneStacks(merged, emptyList())
-}
+fun <T> mergeForPhone(left: List<T>, right: List<T>, player: T): List<T> = left + right.filter { it != player }
 
-/** Opening a detail from Home replaces what the pane shows (it doesn't pile up). */
-fun <T> openFromHome(pane: List<T>, route: T): List<T> = if (pane.lastOrNull() == route) pane else listOf(route)
+/**
+ * Opening a right-side screen: the player resets the side to just the player; Settings or Stats
+ * replaces whatever was swapped in (they never pile up).
+ */
+fun <T> openOnRight(right: List<T>, route: T, player: T): List<T> =
+    if (route == player) listOf(player) else listOf(player, route)

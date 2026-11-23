@@ -126,7 +126,8 @@ fun SearchScreen(
     toAlbum: (Album) -> Unit,
     toArtist: (Artist) -> Unit,
     toPlaylist: (PlaylistEntity) -> Unit,
-    back: () -> Unit,
+    /** Null hides the back arrow (tablets, where the navigation rail is always on screen). */
+    back: (() -> Unit)?,
     searchViewModel: SearchViewModel = hiltViewModel(),
 ) {
     val songsState by songsViewModel.state.collectAsStateWithLifecycle()
@@ -260,24 +261,27 @@ fun SearchScreen(
     }
 }
 
-/** Back arrow and a rounded field with a search icon and a clear button. */
+/** Back arrow (when [onBack] is set) and a rounded field with a search icon and a clear button. */
 @Composable
 private fun SearchField(
     query: String,
     onQueryChange: (String) -> Unit,
     focusRequester: FocusRequester,
-    onBack: () -> Unit,
+    onBack: (() -> Unit)?,
     onSearch: () -> Unit,
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth().statusBarsPadding().padding(start = 4.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
+        modifier = Modifier.fillMaxWidth().statusBarsPadding()
+            .padding(start = if (onBack != null) 4.dp else 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(onClick = onBack) {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.material_symbols__arrow_back_ios_new_rounded),
-                contentDescription = stringResource(R.string.back)
-            )
+        if (onBack != null) {
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.material_symbols__arrow_back_ios_new_rounded),
+                    contentDescription = stringResource(R.string.back)
+                )
+            }
         }
         Surface(
             modifier = Modifier.weight(1f).heightIn(min = 52.dp),

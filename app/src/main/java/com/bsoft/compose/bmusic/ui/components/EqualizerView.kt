@@ -13,9 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -47,29 +45,29 @@ fun EqualizerView(
     /** Called while dragging (persist = false) and on release (persist = true). */
     onEffectsChange: (AudioEffectsSettings, persist: Boolean) -> Unit = { _, _ -> }
 ) {
-    val scrollState = rememberScrollState()
-
-    Column(
-        modifier = modifier.fillMaxSize().padding(20.dp).verticalScroll(state = scrollState, enabled = true), verticalArrangement = Arrangement.spacedBy(20.dp)) {
-
-        // Bass boost, surround and loudness work independently of the equalizer switch.
-        AudioEffectsControls(support = state.effectsSupport, effects = effects, onChange = onEffectsChange)
+    Column(modifier = modifier.fillMaxSize().padding(top = 30.dp, start = 20.dp, end = 20.dp), verticalArrangement = Arrangement.spacedBy(20.dp)) {
 
         // Switch to enable/disable equalizer
         EqualizerSwitch(enabled = enabled){
             toggleEnable()
         }
 
+        // Equalizer sliders (shown only when enabled)
         AnimatedVisibility(visible = enabled, enter = fadeIn() + slideInVertically(), exit = fadeOut() + slideOutVertically()) {
-            Column {
-                // Presets (shown only when enabled)
-                PresetsView(selectedBand = selectedBand, customValues = customValues, presets = state.presets){ preset ->
-                    selectedPreset(preset)
-                }
-                // Equalizer sliders (shown only when enabled)
-                EqualizerControls(bands = state.bands){ band, level -> bandModified(band, level) }
+            EqualizerControls(bands = state.bands){
+                    band, level -> bandModified(band, level)
             }
         }
+
+        // Presets (shown only when enabled)
+        AnimatedVisibility(visible = enabled, enter = fadeIn() + slideInVertically(), exit = fadeOut() + slideOutVertically()) {
+            PresetsView(selectedBand = selectedBand, customValues = customValues, presets = state.presets){ preset ->
+                selectedPreset(preset)
+            }
+        }
+
+        // Bass boost, surround and loudness work independently of the equalizer switch.
+        AudioEffectsControls(support = state.effectsSupport, effects = effects, onChange = onEffectsChange)
     }
 }
 
@@ -131,6 +129,16 @@ private fun AudioEffectsControls(
                     }
                 }
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun EqualizerViewPreview(){
+    BMusicTheme {
+        Surface(color = Color.DarkGray) {
+            //EqualizerView(, selectedPreset = {}, toggleEnable = {}, bandModified = { band, level -> })
         }
     }
 }

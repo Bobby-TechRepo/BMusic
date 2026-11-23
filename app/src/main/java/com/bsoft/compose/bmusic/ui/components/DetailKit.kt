@@ -55,7 +55,6 @@ import com.bsoft.compose.bmusic.R
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.foundation.layout.heightIn
-import com.bsoft.compose.bmusic.data.models.Song
 
 /*
  * The album, artist and playlist screens: blurred artwork behind everything, a large header
@@ -271,11 +270,11 @@ fun DetailArtwork(bitmap: Bitmap?, @DrawableRes placeholder: Int, round: Boolean
  * there are fewer, or the playlist background with a queue icon when it is empty.
  */
 @Composable
-fun PlaylistArtwork(songs: List<Song>, @DrawableRes bg: Int, size: Dp = 200.dp) {
+fun PlaylistArtwork(songs: List<com.bsoft.compose.bmusic.data.models.Song>, @DrawableRes bg: Int, size: Dp = 208.dp) {
     val covers = remember(songs) {
         songs.asSequence()
             .distinctBy { if (it.albumId >= 0) it.albumId else -it.id - 1 }
-            .map { it.mediaUri }
+            .map { it.artworkUri ?: it.mediaUri }
             .take(4)
             .toList()
     }

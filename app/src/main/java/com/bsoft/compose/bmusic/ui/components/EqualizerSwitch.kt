@@ -27,13 +27,7 @@ fun EqualizerSwitch(modifier: Modifier = Modifier, enabled: Boolean = false, che
         )
         Switch(
             checked = enabled,
-            colors = SwitchDefaults.colors(
-                checkedTrackColor = Color.White.copy(alpha = 0.6f),
-                checkedThumbColor = Color.White,
-                uncheckedThumbColor = Color.White,
-                uncheckedTrackColor = Color.White.copy(alpha = 0.1f),
-                uncheckedBorderColor = Color.Transparent
-            ),
+            colors = SwitchDefaults.colors(checkedTrackColor = MaterialTheme.colorScheme.surfaceContainerHighest),
             onCheckedChange = { check(it) }
         )
     }

@@ -363,8 +363,6 @@
 
     <!-- Phase 9: large screens, accessibility, keyboard -->
     <string name="cd_open_player">プレーヤーを開く</string>
-    <string name="pane_empty_title">まだ何も開いていません</string>
-    <string name="pane_empty_message">アルバム、アーティスト、プレイリストを選ぶとここに表示されます。</string>
     <string name="seek_position">%2$s 中 %1$s</string>
     <string name="shortcuts_title">キーボード ショートカット</string>
     <string name="shortcuts_summary">キーボード付きのタブレットや Chromebook 向け</string>
@@ -379,4 +377,10 @@
     <string name="greeting_afternoon">こんにちは</string>
     <string name="greeting_evening">こんばんは</string>
     <string name="unknown_artist">不明なアーティスト</string>
+    <!-- Tablet layout -->
+    <string name="cd_queue_panel">キュー、歌詞、イコライザー</string>
+    <string name="player_welcome_title">再生する曲を選びましょう</string>
+    <string name="player_welcome_body">ライブラリから曲を選ぶか、BMusicにすべてシャッフルさせましょう。</string>
+    <string name="player_welcome_browse">曲を見る</string>
+    <string name="shuffle_all">すべてシャッフル</string>
 </resources>
