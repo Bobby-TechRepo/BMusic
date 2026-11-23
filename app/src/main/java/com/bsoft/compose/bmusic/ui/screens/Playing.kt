@@ -21,6 +21,7 @@ import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
@@ -77,9 +78,19 @@ fun PlayingScreen(
     lyricsViewModel: LyricsViewModel = hiltViewModel(),
     /** Saves the current queue as a new playlist with the given name. */
     onSaveQueueAsPlaylist: (name: String, songs: List<Song>) -> Unit = { _, _ -> },
+    /**
+     * Tablet layout: the player is always on screen (no back arrow), shows a welcome card when
+     * nothing is playing, and carries the Stats and Settings buttons.
+     */
+    persistent: Boolean = false,
+    onOpenStats: (() -> Unit)? = null,
+    onOpenSettings: (() -> Unit)? = null,
+    onShuffleAll: (() -> Unit)? = null,
+    onBrowseSongs: (() -> Unit)? = null,
     back: () -> Unit
 ) {
-    TransparentStatusBarHandler()
+    // Light status-bar icons over the artwork; on tablets the bar is shared with the library.
+    if (!persistent) TransparentStatusBarHandler()
 
     val coroutineScope = rememberCoroutineScope()
     val playState by playingViewModel.state.collectAsStateWithLifecycle()
@@ -236,115 +247,200 @@ fun PlayingScreen(
                     }
                 }
             } else {
-                // Tablet Layout: Split Pane
-                Column(modifier = Modifier.padding(screenPadding).fillMaxSize()) {
-                    Row(
-                        modifier = Modifier.padding(16.dp).fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        IconButton(onClick = { back() }) {
-                            Icon(
-                                tint = Color.White,
-                                imageVector = ImageVector.vectorResource(R.drawable.material_symbols__arrow_back_ios_new_rounded),
-                                contentDescription = stringResource(R.string.back)
+                // Large screens: the player fills its section. Queue, lyrics and the equalizer
+                // live in one panel that slides over its right side, opened and closed with a
+                // single button.
+                var panelOpen by rememberSaveable { mutableStateOf(false) }
+                var panelTab by rememberSaveable { mutableIntStateOf(0) }
+                androidx.activity.compose.BackHandler(enabled = panelOpen) { panelOpen = false }
+
+                BoxWithConstraints(modifier = Modifier.padding(screenPadding).fillMaxSize()) {
+                    // The panel takes a bit over half the player: wide enough for full queue rows
+                    // and the equalizer, while the artwork still shows beside it.
+                    val panelWidth = (maxWidth * 0.58f).coerceIn(380.dp, 560.dp).coerceAtMost(maxWidth - 24.dp)
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            if (!persistent) {
+                                IconButton(onClick = { back() }) {
+                                    Icon(
+                                        tint = Color.White,
+                                        imageVector = ImageVector.vectorResource(R.drawable.material_symbols__arrow_back_ios_new_rounded),
+                                        contentDescription = stringResource(R.string.back)
+                                    )
+                                }
+                            }
+                            Text(
+                                modifier = Modifier.weight(1f).padding(start = if (persistent) 8.dp else 0.dp).semantics { heading() },
+                                text = stringResource(R.string.now_playing),
+                                style = MaterialTheme.typography.headlineSmall,
+                                color = Color.White
                             )
+                            PlayerHeaderButton(
+                                icon = R.drawable.ms_queue_music,
+                                label = stringResource(R.string.cd_queue_panel),
+                                active = panelOpen,
+                                onClick = { panelOpen = !panelOpen }
+                            )
+                            onOpenStats?.let { PlayerHeaderButton(R.drawable.ms_bar_chart, stringResource(R.string.stats_title), onClick = it) }
+                            onOpenSettings?.let { PlayerHeaderButton(R.drawable.ms_settings, stringResource(R.string.settings), onClick = it) }
                         }
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Text(
-                            text = stringResource(R.string.now_playing),
-                            style = MaterialTheme.typography.headlineMedium,
-                            color = Color.White
-                        )
+
+                        Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            if (persistent && queueState.current == null) {
+                                PlayerWelcome(onShuffleAll = onShuffleAll, onBrowse = onBrowseSongs)
+                            } else {
+                                Box(modifier = Modifier.widthIn(max = 620.dp).fillMaxHeight()) {
+                                    PlayerControl(
+                                        playingState = playState,
+                                        queueState = queueState,
+                                        bitmap = bitmap,
+                                        isFavorite = isFavorite,
+                                        next = { playingViewModel.next() },
+                                        previous = { playingViewModel.previous() },
+                                        playToggled = { playingViewModel.togglePlayPause() },
+                                        forward = { playingViewModel.forward() },
+                                        rewind = { playingViewModel.rewind() },
+                                        seek = { playingViewModel.seek(it) },
+                                        repeatToggled = { playingViewModel.toggleRepeat() },
+                                        shuffleToggled = { playingViewModel.toggleShuffle() },
+                                        favouriteToggled = { playingViewModel.toggleFavorite() },
+                                        sleepTimerActive = sleepState != SleepTimerState.Off,
+                                        openPlaybackOptions = { showPlaybackOptions = true }
+                                    )
+                                }
+                            }
+                        }
                     }
 
-                    Row(modifier = Modifier.fillMaxSize()) {
-                        // Left: Controls
-                        Box(modifier = Modifier.weight(1.2f).fillMaxHeight()) {
-                            PlayerControl(
-                                playingState = playState,
-                                queueState = queueState,
-                                bitmap = bitmap,
-                                isFavorite = isFavorite,
-                                next = { playingViewModel.next() },
-                                previous = { playingViewModel.previous() },
-                                playToggled = { playingViewModel.togglePlayPause() },
-                                forward = { playingViewModel.forward() },
-                                rewind = { playingViewModel.rewind() },
-                                seek = { playingViewModel.seek(it) },
-                                repeatToggled = { playingViewModel.toggleRepeat() },
-                                shuffleToggled = { playingViewModel.toggleShuffle() },
-                                favouriteToggled = { playingViewModel.toggleFavorite() },
-                                sleepTimerActive = sleepState != SleepTimerState.Off,
-                                openPlaybackOptions = { showPlaybackOptions = true }
-                            )
-                        }
-                        
-                        // Right: Toggleable Queue & Equalizer
-                        var rightPaneIndex by remember { mutableIntStateOf(0) }
-                        
-                        Column(modifier = Modifier.weight(0.8f).fillMaxHeight().padding(end = 16.dp)) {
-                            Surface(
-                                modifier = Modifier.weight(1f).fillMaxWidth(),
-                                shape = RoundedCornerShape(24.dp),
-                                color = Color.Black.copy(alpha = 0.4f)
-                            ) {
-                                Column(modifier = Modifier.padding(16.dp)) {
-                                    SecondaryTabRow(
-                                        selectedTabIndex = rightPaneIndex,
-                                        containerColor = Color.Transparent,
-                                        contentColor = Color.White,
-                                        divider = {}
-                                    ) {
+                    // The overlay panel: Queue | Lyrics | Equalizer.
+                    androidx.compose.animation.AnimatedVisibility(
+                        modifier = Modifier.align(Alignment.CenterEnd),
+                        visible = panelOpen,
+                        enter = androidx.compose.animation.slideInHorizontally { it } + androidx.compose.animation.fadeIn(),
+                        exit = androidx.compose.animation.slideOutHorizontally { it } + androidx.compose.animation.fadeOut()
+                    ) {
+                        Surface(
+                            modifier = Modifier
+                                .padding(start = 12.dp, end = 12.dp, top = 76.dp, bottom = 12.dp)
+                                .width(panelWidth)
+                                .fillMaxHeight(),
+                            shape = RoundedCornerShape(28.dp),
+                            color = Color(0xF0141519),
+                            shadowElevation = 16.dp
+                        ) {
+                            Column(modifier = Modifier.padding(top = 8.dp)) {
+                                SecondaryTabRow(
+                                    selectedTabIndex = panelTab,
+                                    containerColor = Color.Transparent,
+                                    contentColor = Color.White,
+                                    divider = {}
+                                ) {
+                                    listOf(R.string.queue, R.string.lyrics, R.string.equalizer).forEachIndexed { index, label ->
                                         Tab(
-                                            selected = rightPaneIndex == 0,
-                                            onClick = { rightPaneIndex = 0 },
-                                            text = { Text(stringResource(R.string.queue), color = Color.White) }
-                                        )
-                                        Tab(
-                                            selected = rightPaneIndex == 1,
-                                            onClick = { rightPaneIndex = 1 },
-                                            text = { Text(stringResource(R.string.lyrics), color = Color.White) }
-                                        )
-                                        Tab(
-                                            selected = rightPaneIndex == 2,
-                                            onClick = { rightPaneIndex = 2 },
-                                            text = { Text(stringResource(R.string.equalizer), color = Color.White) }
+                                            selected = panelTab == index,
+                                            onClick = { panelTab = index },
+                                            text = { Text(stringResource(label), color = Color.White) }
                                         )
                                     }
-                                    
-                                    Spacer(modifier = Modifier.height(16.dp))
-                                    
-                                    Box(modifier = Modifier.fillMaxSize()) {
-                                        if (rightPaneIndex == 0) {
-                                            QueueView(queueState, recordableState, playingViewModel, onSaveQueueAsPlaylist, bitmap, playState.playing)
-                                        } else if (rightPaneIndex == 1) {
-                                            lyricsPage(Modifier.fillMaxSize())
-                                        } else {
-                                            Column(
-                                                modifier = Modifier
-                                                    .fillMaxSize()
-                                                    .verticalScroll(rememberScrollState())
-                                            ) {
-                                                EqualizerView(
-                                                    modifier = Modifier.fillMaxWidth(),
-                                                    enabled = isEqualizerEnabled,
-                                                    state = equalizerState,
-                                                    selectedBand = selectedBand,
-                                                    customValues = customValues,
-                                                    selectedPreset = { equalizerViewModel.choosePreset(it.preset) },
-                                                    bandModified = { band, level -> equalizerViewModel.modifyBand(band, level) },
-                                                    effects = audioEffects,
-                                                    onEffectsChange = { settings, persist -> equalizerViewModel.setEffects(settings, persist) },
-                                                    toggleEnable = { equalizerViewModel.toggleEnable() }
-                                                )
-                                            }
+                                }
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Box(modifier = Modifier.fillMaxSize()) {
+                                    when (panelTab) {
+                                        0 -> QueueView(queueState, recordableState, playingViewModel, onSaveQueueAsPlaylist, bitmap, playState.playing)
+                                        1 -> lyricsPage(Modifier.fillMaxSize())
+                                        else -> Column(
+                                            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
+                                        ) {
+                                            EqualizerView(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                enabled = isEqualizerEnabled,
+                                                state = equalizerState,
+                                                selectedBand = selectedBand,
+                                                customValues = customValues,
+                                                selectedPreset = { equalizerViewModel.choosePreset(it.preset) },
+                                                bandModified = { band, level -> equalizerViewModel.modifyBand(band, level) },
+                                                effects = audioEffects,
+                                                onEffectsChange = { settings, persist -> equalizerViewModel.setEffects(settings, persist) },
+                                                toggleEnable = { equalizerViewModel.toggleEnable() }
+                                            )
                                         }
                                     }
                                 }
                             }
-                            Spacer(modifier = Modifier.height(32.dp))
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+/** A round, translucent button in the large-screen player's header; [active] fills it. */
+@Composable
+private fun PlayerHeaderButton(icon: Int, label: String, active: Boolean = false, onClick: () -> Unit) {
+    FilledTonalIconButton(
+        modifier = Modifier.size(48.dp),
+        onClick = onClick,
+        colors = IconButtonDefaults.filledTonalIconButtonColors(
+            containerColor = if (active) Color.White else Color.White.copy(alpha = 0.14f),
+            contentColor = if (active) Color.Black else Color.White
+        )
+    ) {
+        Icon(imageVector = ImageVector.vectorResource(icon), contentDescription = label)
+    }
+}
+
+/** The large-screen player before anything has played. */
+@Composable
+private fun PlayerWelcome(onShuffleAll: (() -> Unit)?, onBrowse: (() -> Unit)?) {
+    Column(
+        modifier = Modifier.padding(32.dp).widthIn(max = 420.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Surface(
+            modifier = Modifier.size(200.dp),
+            shape = RoundedCornerShape(32.dp),
+            color = Color.White.copy(alpha = 0.10f)
+        ) {
+            Box(contentAlignment = Alignment.Center) {
+                Icon(
+                    modifier = Modifier.size(88.dp),
+                    imageVector = ImageVector.vectorResource(R.drawable.ms_music_note),
+                    tint = Color.White.copy(alpha = 0.8f),
+                    contentDescription = null
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = stringResource(R.string.player_welcome_title),
+            style = MaterialTheme.typography.headlineSmall,
+            color = Color.White
+        )
+        Text(
+            text = stringResource(R.string.player_welcome_body),
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color.White.copy(alpha = 0.72f),
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.padding(top = 8.dp)) {
+            onShuffleAll?.let {
+                Button(
+                    onClick = it,
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Black)
+                ) {
+                    Icon(modifier = Modifier.size(18.dp), imageVector = ImageVector.vectorResource(R.drawable.ms_shuffle), contentDescription = null)
+                    Text(modifier = Modifier.padding(start = 8.dp), text = stringResource(R.string.shuffle_all))
+                }
+            }
+            onBrowse?.let {
+                OutlinedButton(onClick = it, colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)) {
+                    Text(stringResource(R.string.player_welcome_browse))
                 }
             }
         }

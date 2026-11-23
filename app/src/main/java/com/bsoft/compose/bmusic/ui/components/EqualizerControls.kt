@@ -92,7 +92,6 @@ fun EqualizerControls(modifier: Modifier = Modifier, bands: List<EqualizerBand> 
                             }
                         }
                     },
-
                     colors = SliderDefaults.colors(thumbColor = Color.White, activeTrackColor = Color.White, inactiveTrackColor = Color.White.copy(alpha = 0.3f))
                 )
             }
@@ -105,9 +104,7 @@ fun EqualizerControls(modifier: Modifier = Modifier, bands: List<EqualizerBand> 
 fun EqualizerControlsPreview(){
     BMusicTheme {
         Surface(color = Color.DarkGray) {
-            EqualizerControls{
-                band, level ->
-            }
+            EqualizerControls{ _, _-> }
         }
     }
 }

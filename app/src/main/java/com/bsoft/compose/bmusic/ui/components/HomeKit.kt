@@ -61,8 +61,9 @@ private fun greeting(): String {
 
 @Composable
 fun HomeHeader(
-    onStats: () -> Unit,
-    onSettings: () -> Unit,
+    /** Null hides the button (on tablets Stats and Settings live on the player). */
+    onStats: (() -> Unit)?,
+    onSettings: (() -> Unit)?,
     onSearch: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -86,8 +87,8 @@ fun HomeHeader(
                     color = MaterialTheme.colorScheme.onSurface
                 )
             }
-            HeaderAction(R.drawable.ms_bar_chart, stringResource(R.string.stats_title), onStats)
-            HeaderAction(R.drawable.ms_settings, stringResource(R.string.settings), onSettings)
+            onStats?.let { HeaderAction(R.drawable.ms_bar_chart, stringResource(R.string.stats_title), it) }
+            onSettings?.let { HeaderAction(R.drawable.ms_settings, stringResource(R.string.settings), it) }
         }
         SearchPill(onClick = onSearch, modifier = Modifier.padding(horizontal = 16.dp).padding(bottom = 12.dp))
     }

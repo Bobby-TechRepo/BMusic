@@ -5,48 +5,55 @@ import org.junit.Test
 
 class PanesTest {
 
-    private val detail: (String) -> Boolean = { it.startsWith("album") || it.startsWith("artist") || it.startsWith("playlist") }
+    private val rightSide: (String) -> Boolean = { it == "playing" || it == "settings" || it == "stats" }
 
     @Test
-    fun detailsAboveHomeMoveIntoThePane() {
-        val result = moveDetailsIntoPane(listOf("home", "artist1", "album2"), emptyList(), "home", detail)
-        assertEquals(PaneStacks(listOf("home"), listOf("artist1", "album2")), result)
+    fun libraryScreensStayLeftAndPlayerRests() {
+        val result = splitForTablet(listOf("home", "artist1", "album2"), "home", "playing", rightSide)
+        assertEquals(TabletStacks(listOf("home", "artist1", "album2"), listOf("playing")), result)
     }
 
     @Test
-    fun fullScreenTopKeepsEverythingWhereItIs() {
-        val root = listOf("home", "album2", "settings")
-        assertEquals(PaneStacks(root, emptyList<String>()), moveDetailsIntoPane(root, emptyList(), "home", detail))
+    fun settingsOnTopIsSwappedInForThePlayer() {
+        val result = splitForTablet(listOf("home", "album2", "playing", "settings"), "home", "playing", rightSide)
+        assertEquals(TabletStacks(listOf("home", "album2"), listOf("playing", "settings")), result)
     }
 
     @Test
-    fun onlyHomeMeansNothingToMove() {
-        assertEquals(PaneStacks(listOf("home"), listOf("album1")), moveDetailsIntoPane(listOf("home"), listOf("album1"), "home", detail))
+    fun onlyTheLatestSwappedScreenIsKept() {
+        val result = splitForTablet(listOf("home", "stats", "search", "settings"), "home", "playing", rightSide)
+        assertEquals(TabletStacks(listOf("home", "search"), listOf("playing", "settings")), result)
     }
 
     @Test
-    fun paneGoesBackRightAboveHome() {
-        val result = movePaneIntoRoot(listOf("home", "settings"), listOf("artist1", "album2"), "home")
-        assertEquals(PaneStacks(listOf("home", "artist1", "album2", "settings"), emptyList<String>()), result)
+    fun homeIsAlwaysAtTheBottomOnTheLeft() {
+        val result = splitForTablet(listOf("settings"), "home", "playing", rightSide)
+        assertEquals(TabletStacks(listOf("home"), listOf("playing", "settings")), result)
     }
 
     @Test
-    fun emptyPaneChangesNothing() {
-        val root = listOf("home", "player")
-        assertEquals(PaneStacks(root, emptyList<String>()), movePaneIntoRoot(root, emptyList(), "home"))
+    fun phoneGetsTheSwappedScreenOnTop() {
+        assertEquals(
+            listOf("home", "album2", "settings"),
+            mergeForPhone(listOf("home", "album2"), listOf("playing", "settings"), "playing")
+        )
     }
 
     @Test
-    fun roundTripKeepsTheSameScreens() {
-        val wide = moveDetailsIntoPane(listOf("home", "playlist3", "album4"), emptyList(), "home", detail)
-        val narrow = movePaneIntoRoot(wide.root, wide.pane, "home")
-        assertEquals(listOf("home", "playlist3", "album4"), narrow.root)
+    fun restingPlayerIsNotPushedOnPhones() {
+        assertEquals(listOf("home"), mergeForPhone(listOf("home"), listOf("playing"), "playing"))
     }
 
     @Test
-    fun openingFromHomeReplacesThePane() {
-        assertEquals(listOf("album9"), openFromHome(listOf("artist1", "album2"), "album9"))
-        // Tapping the open one again keeps its history.
-        assertEquals(listOf("artist1", "album2"), openFromHome(listOf("artist1", "album2"), "album2"))
+    fun rightSideScreensNeverPileUp() {
+        assertEquals(listOf("playing", "stats"), openOnRight(listOf("playing", "settings"), "stats", "playing"))
+        assertEquals(listOf("playing"), openOnRight(listOf("playing", "settings"), "playing", "playing"))
+    }
+
+    @Test
+    fun roundTripKeepsEverything() {
+        val phone = listOf("home", "artist1", "album2", "stats")
+        val split = splitForTablet(phone, "home", "playing", rightSide)
+        assertEquals(phone, mergeForPhone(split.left, split.right, "playing"))
     }
 }

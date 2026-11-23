@@ -363,8 +363,6 @@
 
     <!-- Phase 9: large screens, accessibility, keyboard -->
     <string name="cd_open_player">打开播放器</string>
-    <string name="pane_empty_title">尚未打开任何内容</string>
-    <string name="pane_empty_message">选择专辑、艺人或播放列表，即可在此查看。</string>
     <string name="seek_position">%1$s / %2$s</string>
     <string name="shortcuts_title">键盘快捷键</string>
     <string name="shortcuts_summary">适用于带键盘的平板电脑和 Chromebook</string>
@@ -379,4 +377,10 @@
     <string name="greeting_afternoon">下午好</string>
     <string name="greeting_evening">晚上好</string>
     <string name="unknown_artist">未知艺人</string>
+    <!-- Tablet layout -->
+    <string name="cd_queue_panel">队列、歌词和均衡器</string>
+    <string name="player_welcome_title">选点什么来播放</string>
+    <string name="player_welcome_body">从音乐库中选一首歌，或让 BMusic 随机播放全部歌曲。</string>
+    <string name="player_welcome_browse">浏览歌曲</string>
+    <string name="shuffle_all">全部随机播放</string>
 </resources>

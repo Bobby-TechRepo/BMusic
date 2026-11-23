@@ -47,14 +47,19 @@ import com.bsoft.compose.bmusic.data.tags.EDITABLE_EXTENSIONS
 import com.bsoft.compose.bmusic.data.tags.TagEditorRepository
 import com.bsoft.compose.bmusic.data.tags.fileExtension
 import com.bsoft.compose.bmusic.ui.screens.TagEditorScreen
-import androidx.activity.compose.BackHandler
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.navigation3.runtime.NavKey
-import com.bsoft.compose.bmusic.ui.components.EmptyState
-import com.bsoft.compose.bmusic.utils.moveDetailsIntoPane
-import com.bsoft.compose.bmusic.utils.movePaneIntoRoot
-import com.bsoft.compose.bmusic.utils.openFromHome
+import com.bsoft.compose.bmusic.utils.HomeDestination
+import com.bsoft.compose.bmusic.utils.mergeForPhone
+import com.bsoft.compose.bmusic.utils.openOnRight
+import com.bsoft.compose.bmusic.utils.splitForTablet
+import com.bsoft.compose.bmusic.data.models.MediaSource
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.DpSize
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import com.bsoft.compose.bmusic.utils.ShortcutAction
@@ -65,7 +70,7 @@ import com.bsoft.compose.bmusic.viewmodels.OpenedFile
 import com.bsoft.compose.bmusic.viewmodels.OpenedFileViewModel
 import androidx.compose.runtime.getValue
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun Main(
     modifier: Modifier = Modifier,
@@ -87,6 +92,43 @@ fun Main(
     val rootBackStack = rememberNavBackStack(Route.Home)
     fun back() { if (rootBackStack.size > 1) rootBackStack.removeAt(rootBackStack.lastIndex) }
 
+    // Tablet layout (landscape, >= 840 dp wide): a phone-sized library section on the left and the
+    // player on the right, where only Settings and Listening stats can be swapped in for it.
+    // Each side has its own back stack; see utils/Panes.kt.
+    val tablet = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded
+    val rightStack = rememberNavBackStack(Route.Playing)
+    // Effects started earlier (shortcuts, opened files) must see the current layout.
+    val isTablet by rememberUpdatedState(tablet)
+    var libraryTab by rememberSaveable { mutableIntStateOf(-1) }
+    val isRightSide: (NavKey) -> Boolean = { it is Route.Playing || it is Route.Settings || it is Route.Stats }
+    LaunchedEffect(tablet) {
+        if (tablet) {
+            val split = splitForTablet(rootBackStack.toList(), Route.Home, Route.Playing, isRightSide)
+            if (split.left != rootBackStack.toList()) { rootBackStack.clear(); rootBackStack.addAll(split.left) }
+            if (split.right != rightStack.toList()) { rightStack.clear(); rightStack.addAll(split.right) }
+        } else {
+            val merged = mergeForPhone(rootBackStack.toList(), rightStack.toList(), Route.Playing)
+            if (merged != rootBackStack.toList()) { rootBackStack.clear(); rootBackStack.addAll(merged) }
+            if (rightStack.toList() != listOf(Route.Playing)) { rightStack.clear(); rightStack.add(Route.Playing) }
+        }
+    }
+    /** Opens a screen: on tablets the player, Settings and Stats open on the right. */
+    fun navigate(route: Route) {
+        if (isTablet && isRightSide(route)) {
+            val next = openOnRight(rightStack.toList(), route, Route.Playing)
+            if (next != rightStack.toList()) { rightStack.clear(); rightStack.addAll(next) }
+        } else if (rootBackStack.lastOrNull() != route) {
+            rootBackStack.add(route)
+        }
+    }
+    fun backRight() { if (rightStack.size > 1) rightStack.removeAt(rightStack.lastIndex) }
+    /** Tablet rail: back to Home in the library section, on the chosen tab. */
+    fun showLibraryTab(index: Int) {
+        while (rootBackStack.size > 1) rootBackStack.removeAt(rootBackStack.lastIndex)
+        libraryTab = index
+    }
+
+
     LaunchedEffect(shortcuts) {
         shortcuts.collect { action ->
             when (action) {
@@ -95,7 +137,7 @@ fun Main(
                 ShortcutAction.PREVIOUS -> playingViewModel.previous()
                 ShortcutAction.SEEK_FORWARD -> playingViewModel.forward()
                 ShortcutAction.SEEK_BACK -> playingViewModel.rewind()
-                ShortcutAction.SEARCH -> if (rootBackStack.lastOrNull() != Route.Search) rootBackStack.add(Route.Search)
+                ShortcutAction.SEARCH -> navigate(Route.Search)
             }
         }
     }
@@ -112,28 +154,7 @@ fun Main(
             is OpenedFile.External -> playingViewModel.playItem(opened.item)
         }
         onOpenedFileHandled()
-        if (rootBackStack.lastOrNull() != Route.Playing) rootBackStack.add(Route.Playing)
-    }
-
-    // Two-pane library on large screens (>= 840 dp wide): see utils/Panes.kt.
-    val twoPane = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded
-    val pane = rememberNavBackStack()
-    val paneStates = rememberSaveableStateHolder()
-    LaunchedEffect(twoPane) {
-        val isDetail: (NavKey) -> Boolean = { it is Route.Album || it is Route.Artist || it is Route.Playlist }
-        val moved = if (twoPane) moveDetailsIntoPane(rootBackStack.toList(), pane.toList(), Route.Home, isDetail)
-        else movePaneIntoRoot(rootBackStack.toList(), pane.toList(), Route.Home)
-        if (moved.root != rootBackStack.toList()) { rootBackStack.clear(); rootBackStack.addAll(moved.root) }
-        if (moved.pane != pane.toList()) { pane.clear(); pane.addAll(moved.pane) }
-    }
-    /** Opens an album/artist/playlist: in the pane when Home is showing on a large screen. */
-    fun showDetail(route: Route) {
-        if (twoPane && rootBackStack.lastOrNull() == Route.Home) {
-            val next = openFromHome(pane.toList(), route)
-            pane.clear(); pane.addAll(next)
-        } else {
-            rootBackStack.add(route)
-        }
+        navigate(Route.Playing)
     }
 
     val context = LocalContext.current
@@ -191,164 +212,199 @@ fun Main(
         }
     }
 
-    // Album, artist and playlist screens: full screen, or in the right pane on large screens.
-    val detailContent: @Composable (Route, Boolean) -> Unit = { route, inPane ->
-        val push: (Route) -> Unit = { next -> if (inPane) pane.add(next) else rootBackStack.add(next) }
-        val goBack: () -> Unit = { if (inPane) { if (pane.isNotEmpty()) pane.removeAt(pane.lastIndex) } else back() }
-        when (route) {
-                    is Route.Album -> AlbumScreen(
-                        modifier = modifier,
-                        id = route.id,
-                        viewModel = viewModel,
-                        play = { album, index ->
-                            playingViewModel.playLibrary(album.toMediaItem(index))
-                        },
-                        playAll = { item, shuffle ->
-                            playingViewModel.playLibraryAll(item, shuffle)
-                        },
-                        openSongMenu = { songMenu = it },
-                        nowPlayingMediaId = nowPlayingMediaId,
-                        isPlaying = playState.playing,
-                        togglePlayPause = { playingViewModel.togglePlayPause() },
-                        back = goBack
-                    )
-                    is Route.Artist -> ArtistScreen(
-                        modifier = modifier,
-                        id = route.id,
-                        viewModel = viewModel,
-                        toAlbum = { album -> push(Route.Album(album.id)) },
-                        play = { artist, index ->
-                            playingViewModel.playLibrary(artist.toMediaItem(index))
-                        },
-                        playAll = { item, shuffle ->
-                            playingViewModel.playLibraryAll(item, shuffle)
-                        },
-                        openSongMenu = { songMenu = it },
-                        nowPlayingMediaId = nowPlayingMediaId,
-                        isPlaying = playState.playing,
-                        togglePlayPause = { playingViewModel.togglePlayPause() },
-                        back = goBack
-                    )
-                    is Route.Playlist -> PlaylistScreen(
-                        modifier = modifier,
-                        playingViewModel = playingViewModel,
-                        songsViewModel = viewModel,
-                        playlistsOptions = route.playlistsOptions,
-                        id = route.playlist,
-                        add = { playlist, title ->
-                            rootBackStack.add(Route.AddSongs(playlist = playlist, title = title))
-                        },
-                        openSongMenu = { songMenu = it },
-                        back = goBack
-                    )
-                    else -> Unit
+    // Every screen, shared by the phone stack and both tablet sections. [right]: shown in the
+    // tablet's right section, where back returns to the player.
+    fun screens(right: Boolean, libraryWindow: WindowSizeClass) = entryProvider<NavKey> {
+        val closeRight: () -> Unit = { if (right) backRight() else back() }
+        entry<Route.Home> {
+            HomeScreen(
+                modifier = modifier,
+                windowSizeClass = libraryWindow,
+                viewModel = viewModel,
+                playingViewModel = playingViewModel,
+                toScreen = { navigate(it) },
+                toAlbum = { navigate(Route.Album(it.id)) },
+                toArtist = { navigate(Route.Artist(it.id)) },
+                toPlaylist = { option, playlist ->
+                    navigate(Route.Playlist(option, playlist = playlist?.first))
+                },
+                toAddSongs = { id, name -> navigate(Route.AddSongs(id, name)) },
+                settings = settingsState,
+                onTabChanged = { settingsViewModel.setLastTab(it) },
+                onSongSortChanged = { settingsViewModel.setSongSort(it.name) },
+                openSearch = { navigate(Route.Search) },
+                openSongMenu = { songMenu = it },
+                tabletLibrary = tablet,
+                requestedTab = libraryTab.takeIf { tablet && it >= 0 },
+                onPageShown = { libraryTab = it }
+            )
+        }
+        entry<Route.Stats> {
+            StatsScreen(back = closeRight)
+        }
+        entry<Route.Search> {
+            SearchScreen(
+                songsViewModel = viewModel,
+                playingViewModel = playingViewModel,
+                openSongMenu = { songMenu = it },
+                toAlbum = { navigate(Route.Album(it.id)) },
+                toArtist = { navigate(Route.Artist(it.id)) },
+                toPlaylist = { navigate(Route.Playlist(null, it.id)) },
+                // Tablets: the rail is always there, and system back still works.
+                back = if (tablet) null else ({ back() })
+            )
+        }
+        entry<Route.Album> { route ->
+            AlbumScreen(
+                modifier = modifier,
+                id = route.id,
+                viewModel = viewModel,
+                play = { album, index ->
+                    playingViewModel.playLibrary(album.toMediaItem(index))
+                },
+                playAll = { item, shuffle ->
+                    playingViewModel.playLibraryAll(item, shuffle)
+                },
+                openSongMenu = { songMenu = it },
+                nowPlayingMediaId = nowPlayingMediaId,
+                isPlaying = playState.playing,
+                togglePlayPause = { playingViewModel.togglePlayPause() },
+                back = { back() }
+            )
+        }
+        entry<Route.Artist> { route ->
+            ArtistScreen(
+                modifier = modifier,
+                id = route.id,
+                viewModel = viewModel,
+                toAlbum = { album -> navigate(Route.Album(album.id)) },
+                play = { artist, index ->
+                    playingViewModel.playLibrary(artist.toMediaItem(index))
+                },
+                playAll = { item, shuffle ->
+                    playingViewModel.playLibraryAll(item, shuffle)
+                },
+                openSongMenu = { songMenu = it },
+                nowPlayingMediaId = nowPlayingMediaId,
+                isPlaying = playState.playing,
+                togglePlayPause = { playingViewModel.togglePlayPause() },
+                back = { back() }
+            )
+        }
+        entry<Route.Playlist> { route ->
+            PlaylistScreen(
+                modifier = modifier,
+                playingViewModel = playingViewModel,
+                songsViewModel = viewModel,
+                playlistsOptions = route.playlistsOptions,
+                id = route.playlist,
+                add = { playlist, title ->
+                    navigate(Route.AddSongs(playlist = playlist, title = title))
+                },
+                openSongMenu = { songMenu = it },
+                back = { back() }
+            )
+        }
+        entry<Route.Settings> {
+            SettingsScreen(modifier = modifier, windowSizeClass = windowSizeClass) { closeRight() }
+        }
+        entry<Route.Playing> {
+            val persistent = tablet && right
+            PlayingScreen(
+                modifier = modifier,
+                windowSizeClass = windowSizeClass,
+                playingViewModel = playingViewModel,
+                equalizerViewModel = equalizerViewModel,
+                onSaveQueueAsPlaylist = { name, songs ->
+                    viewModel.createPlaylistWithSongs(name, songs)
+                    showMessage(context.getString(R.string.saved_as_playlist, name))
+                },
+                persistent = persistent,
+                onOpenStats = if (persistent) ({ navigate(Route.Stats) }) else null,
+                onOpenSettings = if (persistent) ({ navigate(Route.Settings) }) else null,
+                onShuffleAll = if (persistent && songsState.songs.isNotEmpty()) ({
+                    val songs = songsState.songs
+                    songs.indices.randomOrNull()?.let { start ->
+                        playingViewModel.playLibraryList(songs, start, true, MediaSource.Songs.prefix)
+                    }
+                }) else null,
+                onBrowseSongs = if (persistent) ({ showLibraryTab(HomeDestination.SONGS.ordinal) }) else null,
+                back = { if (!persistent) closeRight() }
+            )
+        }
+        entry<Route.TagEditor> {
+            TagEditorScreen(
+                songId = it.songId,
+                onSaved = { showMessage(context.getString(R.string.tag_editor_saved)) },
+                back = { back() }
+            )
+        }
+        entry<Route.AddSongs> {
+            AddSongsScreen(
+                id = it.playlist,
+                title = it.title,
+                songsViewModel = viewModel,
+                back = { back() }
+            )
         }
     }
 
+    // On the library's root, back leaves the app like any launcher activity (music keeps playing).
+    val leaveOrBack: () -> Unit = { if (rootBackStack.size > 1) back() else (context as? Activity)?.moveTaskToBack(true) }
+    val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
+        "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
-        NavDisplay(
-            backStack = rootBackStack,
-            // On Home, back leaves the app like any launcher activity (music keeps playing).
-            onBack = { if (rootBackStack.size > 1) back() else (context as? Activity)?.moveTaskToBack(true) },
-            entryDecorators = listOf(
-                rememberSaveableStateHolderNavEntryDecorator(),
-                rememberViewModelStoreNavEntryDecorator(
-                    viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
-                        "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
+        if (tablet) {
+            BoxWithConstraints(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface)) {
+                // The library section is phone-sized: about a third of a landscape tablet.
+                val libraryWidth = (maxWidth * 0.34f).coerceIn(360.dp, 420.dp)
+                val libraryWindow = remember(libraryWidth, maxHeight) {
+                    WindowSizeClass.calculateFromSize(DpSize(libraryWidth, maxHeight))
+                }
+                Row(modifier = Modifier.fillMaxSize()) {
+                    TabletRail(
+                        selectedTab = libraryTab,
+                        onSelect = { showLibraryTab(it) },
+                        onSearch = { navigate(Route.Search) }
+                    )
+                    Box(modifier = Modifier.width(libraryWidth).fillMaxHeight()) {
+                        NavDisplay(
+                            backStack = rootBackStack,
+                            onBack = leaveOrBack,
+                            entryDecorators = listOf(
+                                rememberSaveableStateHolderNavEntryDecorator(),
+                                rememberViewModelStoreNavEntryDecorator(viewModelStoreOwner = viewModelStoreOwner)
+                            ),
+                            entryProvider = screens(right = false, libraryWindow = libraryWindow)
+                        )
                     }
-                )
-            ),
-            entryProvider = entryProvider {
-                entry<Route.Home> {
-                    val homeScreen: @Composable (Modifier) -> Unit = { homeModifier ->
-                    HomeScreen(
-                        modifier = homeModifier,
-                        windowSizeClass = windowSizeClass,
-                        viewModel = viewModel,
-                        playingViewModel = playingViewModel,
-                        toScreen = { rootBackStack.add(it) },
-                        toAlbum = { showDetail(Route.Album(it.id)) },
-                        toArtist = { showDetail(Route.Artist(it.id)) },
-                        toPlaylist = { option, playlist ->
-                            showDetail(Route.Playlist(option, playlist = playlist?.first))
-                        },
-                        toAddSongs = { id, name -> rootBackStack.add(Route.AddSongs(id, name)) },
-                        settings = settingsState,
-                        onTabChanged = { settingsViewModel.setLastTab(it) },
-                        onSongSortChanged = { settingsViewModel.setSongSort(it.name) },
-                        openSearch = { rootBackStack.add(Route.Search) },
-                        openSongMenu = { songMenu = it }
-                    )
+                    VerticalDivider()
+                    Box(modifier = Modifier.weight(1f).fillMaxHeight()) {
+                        NavDisplay(
+                            backStack = rightStack,
+                            onBack = { backRight() },
+                            entryDecorators = listOf(
+                                rememberSaveableStateHolderNavEntryDecorator(),
+                                rememberViewModelStoreNavEntryDecorator(viewModelStoreOwner = viewModelStoreOwner)
+                            ),
+                            entryProvider = screens(right = true, libraryWindow = libraryWindow)
+                        )
                     }
-                    if (twoPane) {
-                        // Large screens: Home on the left, the open album/artist/playlist on the right.
-                        BackHandler(enabled = pane.isNotEmpty()) { pane.removeAt(pane.lastIndex) }
-                        Row(modifier = modifier.fillMaxSize()) {
-                            homeScreen(Modifier.weight(1f))
-                            VerticalDivider()
-                            Box(modifier = Modifier.weight(1f).fillMaxHeight()) {
-                                val top = pane.lastOrNull() as? Route
-                                if (top == null) {
-                                    PanePlaceholder()
-                                } else {
-                                    paneStates.SaveableStateProvider("${pane.size}:$top") { detailContent(top, true) }
-                                }
-                            }
-                        }
-                    } else {
-                        homeScreen(modifier)
-                    }
-                }
-                entry<Route.Stats> {
-                    StatsScreen(back = { back() })
-                }
-                entry<Route.Search> {
-                    SearchScreen(
-                        songsViewModel = viewModel,
-                        playingViewModel = playingViewModel,
-                        openSongMenu = { songMenu = it },
-                        toAlbum = { rootBackStack.add(Route.Album(it.id)) },
-                        toArtist = { rootBackStack.add(Route.Artist(it.id)) },
-                        toPlaylist = { rootBackStack.add(Route.Playlist(null, it.id)) },
-                        back = { back() }
-                    )
-                }
-                entry<Route.Album> { detailContent(it, false) }
-                entry<Route.Artist> { detailContent(it, false) }
-                entry<Route.Playlist> { detailContent(it, false) }
-                entry<Route.Settings> {
-                    SettingsScreen(modifier = modifier, windowSizeClass = windowSizeClass) { back() }
-                }
-                entry<Route.Playing> {
-                    PlayingScreen(
-                        modifier = modifier,
-                        windowSizeClass = windowSizeClass,
-                        playingViewModel = playingViewModel,
-                        equalizerViewModel = equalizerViewModel,
-                        onSaveQueueAsPlaylist = { name, songs ->
-                            viewModel.createPlaylistWithSongs(name, songs)
-                            showMessage(context.getString(R.string.saved_as_playlist, name))
-                        },
-                        back = { back() }
-                    )
-                }
-                entry<Route.TagEditor> {
-                    TagEditorScreen(
-                        songId = it.songId,
-                        onSaved = { showMessage(context.getString(R.string.tag_editor_saved)) },
-                        back = { back() }
-                    )
-                }
-                entry<Route.AddSongs> {
-                    AddSongsScreen(
-                        id = it.playlist,
-                        title = it.title,
-                        songsViewModel = viewModel,
-                        back = { back() }
-                    )
                 }
             }
-        )
+        } else {
+            NavDisplay(
+                backStack = rootBackStack,
+                onBack = leaveOrBack,
+                entryDecorators = listOf(
+                    rememberSaveableStateHolderNavEntryDecorator(),
+                    rememberViewModelStoreNavEntryDecorator(viewModelStoreOwner = viewModelStoreOwner)
+                ),
+                entryProvider = screens(right = false, libraryWindow = windowSizeClass)
+            )
+        }
 
         when {
             songsState.permissionDenied -> StatusScreen(
@@ -409,11 +465,11 @@ fun Main(
                         viewModel.createPlaylistWithSongs(name, listOf(song))
                         showMessage(context.getString(R.string.added_to_playlist, name))
                     },
-                    goToAlbum = if (librarySong.albumId > 0) ({ showDetail(Route.Album(librarySong.albumId)) }) else null,
-                    goToArtist = if (librarySong.artistId > 0) ({ showDetail(Route.Artist(librarySong.artistId)) }) else null,
+                    goToAlbum = if (librarySong.albumId > 0) ({ navigate(Route.Album(librarySong.albumId)) }) else null,
+                    goToArtist = if (librarySong.artistId > 0) ({ navigate(Route.Artist(librarySong.artistId)) }) else null,
                     editTags = if (TagEditorRepository.isSupportedDevice &&
                         fileExtension(librarySong.path.ifEmpty { librarySong.displayName }) in EDITABLE_EXTENSIONS
-                    ) ({ rootBackStack.add(Route.TagEditor(librarySong.id)) }) else null,
+                    ) ({ navigate(Route.TagEditor(librarySong.id)) }) else null,
                 ),
                 onDismiss = { songMenu = null }
             )
@@ -424,8 +480,8 @@ fun Main(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .navigationBarsPadding()
-                // Keep the message above the mini player.
-                .padding(bottom = 96.dp)
+                // Keep the message above the mini player (tablets have none).
+                .padding(bottom = if (tablet) 24.dp else 96.dp)
         )
     }
 }
@@ -463,18 +519,43 @@ private fun LoadingScreen(message: String) {
     }
 }
 
-/** The right pane before anything is opened. */
+/** The tablet's navigation rail: Search, then the library tabs. */
 @Composable
-private fun PanePlaceholder() {
-    Box(
-        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceContainerLow),
-        contentAlignment = Alignment.Center
+private fun TabletRail(selectedTab: Int, onSelect: (Int) -> Unit, onSearch: () -> Unit) {
+    NavigationRail(
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        header = {
+            FloatingActionButton(
+                modifier = Modifier.padding(top = 8.dp),
+                onClick = onSearch,
+                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ms_search),
+                    contentDescription = stringResource(R.string.search)
+                )
+            }
+        }
     ) {
-        EmptyState(
-            icon = R.drawable.ms_library_music,
-            title = stringResource(R.string.pane_empty_title),
-            message = stringResource(R.string.pane_empty_message)
-        )
+        Spacer(modifier = Modifier.weight(1f))
+        HomeDestination.entries.forEachIndexed { index, destination ->
+            val selected = selectedTab == index
+            NavigationRailItem(
+                modifier = Modifier.testTag("rail_${destination.name.lowercase()}"),
+                selected = selected,
+                onClick = { onSelect(index) },
+                icon = {
+                    Icon(
+                        modifier = Modifier.size(24.dp),
+                        imageVector = ImageVector.vectorResource(if (selected) destination.selectedIcon else destination.icon),
+                        contentDescription = null
+                    )
+                },
+                label = { Text(stringResource(destination.labelRes)) }
+            )
+        }
+        Spacer(modifier = Modifier.weight(1f))
     }
 }
-

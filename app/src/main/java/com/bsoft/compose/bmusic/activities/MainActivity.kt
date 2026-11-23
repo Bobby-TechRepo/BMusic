@@ -16,7 +16,7 @@ import com.bsoft.compose.bmusic.viewmodels.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import android.content.pm.ActivityInfo
 import android.os.Build
@@ -88,11 +88,13 @@ class MainActivity : AppCompatActivity() {
             val settingsViewModel: SettingsViewModel = hiltViewModel()
             val windowSizeClass = calculateWindowSizeClass(this)
             
-            // Phones stay portrait (the player layouts are built for it). Tablets and foldables
-            // follow the device: Android 16+ ignores orientation locks on large screens anyway.
-            val isTablet = windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact
+            // Phones stay portrait and tablets landscape: each has a layout built for it (the
+            // tablet one is in ui/Main.kt). Decided by the device's smallest width, so it doesn't
+            // flip when the window rotates. Android 16+ may ignore the lock on large screens; the
+            // tablet layout then follows the window width instead.
+            val isTablet = LocalConfiguration.current.smallestScreenWidthDp >= 600
             SideEffect {
-                val wanted = if (isTablet) ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                val wanted = if (isTablet) ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
                 else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                 if (requestedOrientation != wanted) requestedOrientation = wanted
             }

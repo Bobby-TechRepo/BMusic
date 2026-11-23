@@ -395,8 +395,6 @@
 
     <!-- Phase 9: large screens, accessibility, keyboard -->
     <string name="cd_open_player">ouvrir le lecteur</string>
-    <string name="pane_empty_title">Rien d\'ouvert pour l\'instant</string>
-    <string name="pane_empty_message">Choisissez un album, un artiste ou une playlist pour l\'afficher ici.</string>
     <string name="seek_position">%1$s sur %2$s</string>
     <string name="shortcuts_title">Raccourcis clavier</string>
     <string name="shortcuts_summary">Pour les tablettes et Chromebooks avec clavier</string>
@@ -411,4 +409,10 @@
     <string name="greeting_afternoon">Bon après-midi</string>
     <string name="greeting_evening">Bonsoir</string>
     <string name="unknown_artist">Artiste inconnu</string>
+    <!-- Tablet layout -->
+    <string name="cd_queue_panel">File d\'attente, paroles et égaliseur</string>
+    <string name="player_welcome_title">Choisissez quelque chose à écouter</string>
+    <string name="player_welcome_body">Choisissez un titre dans votre bibliothèque ou laissez BMusic tout mélanger.</string>
+    <string name="player_welcome_browse">Parcourir les titres</string>
+    <string name="shuffle_all">Tout en aléatoire</string>
 </resources>
